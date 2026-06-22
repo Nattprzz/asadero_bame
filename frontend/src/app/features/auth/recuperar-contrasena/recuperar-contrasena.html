@@ -1,0 +1,133 @@
+<div class="auth-shell">
+
+  <!-- ── Navbar ─────────────────────────────────────────────────────────── -->
+  <nav class="auth-navbar" aria-label="Navegación">
+    <div class="navbar-inner">
+      <a routerLink="/home" class="brand" aria-label="BAME, ir al inicio">
+        <span class="brand-mark" aria-hidden="true">B</span>
+        <span class="brand-copy">
+          <strong>BAME</strong>
+          <small>{{ t().brandSub }}</small>
+        </span>
+      </a>
+      <div class="navbar-actions">
+        <div class="a11y-control" aria-label="{{ t().a11yAria }}">
+          <app-accessibility-menu />
+          <span class="a11y-label" aria-hidden="true">A<sup>+</sup></span>
+        </div>
+        <button
+          type="button"
+          class="theme-toggle"
+          (click)="toggleTheme()"
+          [attr.aria-label]="userPref.effectiveTheme() === 'dark' ? t().themeLightAria : t().themeDarkAria"
+        >
+          <span class="theme-dot" aria-hidden="true"></span>
+          <span class="theme-label">{{ userPref.effectiveTheme() === 'dark' ? t().themeLight : t().themeDark }}</span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ── Main ───────────────────────────────────────────────────────────── -->
+  <main class="auth-main">
+
+    <!-- Panel izquierdo — seguridad -->
+    <aside class="loyalty-panel" aria-labelledby="security-heading">
+      <span class="eyebrow">Seguridad</span>
+      <h1 id="security-heading">Tu contraseña<br />protege tu cuenta.</h1>
+      <p>Si has olvidado tu contraseña, te enviaremos un enlace para restablecerla de forma segura desde tu correo registrado.</p>
+      <ul class="perks">
+        <li>
+          <span class="perk-icon" aria-hidden="true">🔒</span>
+          <span>El enlace caduca en 30 minutos</span>
+        </li>
+        <li>
+          <span class="perk-icon" aria-hidden="true">🔑</span>
+          <span>Solo tú puedes usarlo</span>
+        </li>
+        <li>
+          <span class="perk-icon" aria-hidden="true">✉</span>
+          <span>Se envía al correo de tu cuenta</span>
+        </li>
+      </ul>
+    </aside>
+
+    <!-- Formulario -->
+    <section class="form-column" aria-label="{{ t().forgotPageTitle }}">
+      <div class="auth-card">
+
+        <!-- ── Estado: éxito ──────────────────────────────────────────── -->
+        @if (done()) {
+          <div class="success-state" role="status" aria-live="polite">
+            <span class="success-icon" aria-hidden="true">✓</span>
+            <h2>Correo enviado</h2>
+            <p>{{ t().forgotPageSuccess }}</p>
+            <a routerLink="/home/login" class="primary-button" style="text-decoration:none; display:flex;">
+              {{ t().backToLogin }}
+            </a>
+          </div>
+
+        <!-- ── Estado: formulario ────────────────────────────────────── -->
+        } @else {
+          <header class="card-header">
+            <h2>{{ t().forgotPageTitle }}</h2>
+            <p>{{ t().forgotPageDesc }}</p>
+          </header>
+
+          <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+
+            <p class="required-legend" aria-hidden="true">
+              <small><span class="required-mark">*</span> {{ t().requiredLegend }}</small>
+            </p>
+
+            <!-- Campo email -->
+            <div class="field-group">
+              <label for="forgot-email">
+                Correo electrónico <span class="required-mark" aria-hidden="true">*</span>
+              </label>
+              <input
+                id="forgot-email"
+                type="email"
+                cdkFocusInitial
+                formControlName="email"
+                autocomplete="email"
+                placeholder="tu@email.com"
+                aria-required="true"
+                [class.invalid]="isEmailInvalid()"
+                [attr.aria-invalid]="isEmailInvalid() || null"
+                [attr.aria-describedby]="isEmailInvalid() ? 'forgot-email-error' : null"
+              />
+              @if (isEmailInvalid()) {
+                <p id="forgot-email-error" class="field-error" role="alert">{{ emailError() }}</p>
+              }
+            </div>
+
+            <!-- Error de envío -->
+            @if (submitError()) {
+              <div class="submit-error" role="alert" aria-live="assertive">
+                {{ submitError() }}
+              </div>
+            }
+
+            <!-- Botón de envío -->
+            <button type="submit" class="primary-button" [disabled]="loading()">
+              @if (loading()) {
+                <span class="spinner" aria-hidden="true"></span>
+                <span>{{ t().loadingAuth }}</span>
+              } @else {
+                <span>{{ t().forgotPageBtn }}</span>
+              }
+            </button>
+
+            <!-- Volver al login -->
+            <a routerLink="/home/login" class="guest-link">
+              ← {{ t().backToLogin }}
+            </a>
+
+          </form>
+        }
+
+      </div>
+    </section>
+  </main>
+</div>

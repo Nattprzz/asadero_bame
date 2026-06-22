@@ -1,0 +1,15 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# framework.yaml (desarrollo) — rutas de depuración.
+#
+# Carga las páginas de error de Symfony únicamente en entorno de desarrollo,
+# permitiendo comprobar y personalizar las respuestas de error sin afectar
+# al comportamiento de producción.
+# ─────────────────────────────────────────────────────────────────────────────
+
+when@dev:
+    _errors:
+        # Registra las rutas internas utilizadas para probar páginas de error.
+        resource: '@FrameworkBundle/Resources/config/routing/errors.php'
+
+        # Prefijo utilizado para acceder a las páginas de error de prueba.
+        prefix: /_error

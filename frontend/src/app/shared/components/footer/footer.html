@@ -1,0 +1,122 @@
+<footer
+  class="mt-16 border-t border-border-default bg-surface-dark text-white shadow-[0_-2px_12px_rgba(0,0,0,0.35)]"
+>
+  <div class="mx-auto w-full max-w-7xl px-4 py-10 md:px-6 md:py-12">
+    <div class="grid grid-cols-1 gap-8 md:grid-cols-2 md:gap-10 lg:grid-cols-4">
+      <!-- Marca -->
+      <section class="lg:col-span-2">
+        <img
+          src="branding/logo.svg"
+          alt="Bame"
+          class="mb-4 w-[130px] md:mb-6 md:w-[150px]"
+        />
+
+        <p class="max-w-md text-body text-white/85 leading-relaxed">
+          Asaderos especializados en pollo asado, comida para llevar y reservas online.
+          Elige tu local favorito y recoge tu pedido sin esperas.
+        </p>
+      </section>
+
+      <!-- Navegación -->
+      <nav [attr.aria-label]="t().footer.navigation">
+        <h2 class="mb-5 font-display text-body font-bold uppercase tracking-wide text-white">
+          {{ t().footer.navigation }}
+        </h2>
+
+        <ul class="m-0 list-none space-y-3 p-0">
+          <li>
+            <a
+              routerLink="/home"
+              class="group flex items-center text-white/80 no-underline transition-colors hover:text-accent"
+            >
+              <tabler-icon icon="chevron-right" [size]="16" class="mr-2 shrink-0 transition-transform group-hover:translate-x-1" aria-hidden="true" />
+              <span>{{ t().nav.inicio }}</span>
+            </a>
+          </li>
+
+          <li>
+            <a
+              routerLink="/home/locales"
+              class="group flex items-center text-white/80 no-underline transition-colors hover:text-accent"
+            >
+              <tabler-icon icon="chevron-right" [size]="16" class="mr-2 shrink-0 transition-transform group-hover:translate-x-1" aria-hidden="true" />
+              <span>{{ t().nav.locales }}</span>
+            </a>
+          </li>
+
+          <li>
+            <a
+              routerLink="/home/acerca-de-nosotros"
+              class="group flex items-center text-white/80 no-underline transition-colors hover:text-accent"
+            >
+              <tabler-icon icon="chevron-right" [size]="16" class="mr-2 shrink-0 transition-transform group-hover:translate-x-1" aria-hidden="true" />
+              <span>{{ t().footer.nosotros }}</span>
+            </a>
+          </li>
+
+          <li>
+            <a
+              routerLink="/home/contacto"
+              class="group flex items-center text-white/80 no-underline transition-colors hover:text-accent"
+            >
+              <tabler-icon icon="chevron-right" [size]="16" class="mr-2 shrink-0 transition-transform group-hover:translate-x-1" aria-hidden="true" />
+              <span>{{ t().nav.contacto }}</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+      <!-- Legal -->
+      <nav [attr.aria-label]="t().footer.legalSection">
+        <h2 class="mb-5 font-display text-body font-bold uppercase tracking-wide text-white">
+          {{ t().footer.legalSection }}
+        </h2>
+
+        <ul class="m-0 list-none space-y-3 p-0">
+          <li>
+            <a
+              [routerLink]="['/legal', 'terminos-y-condiciones']"
+              class="group flex items-center text-white/80 no-underline transition-colors hover:text-accent"
+            >
+              <tabler-icon icon="chevron-right" [size]="16" class="mr-2 shrink-0 transition-transform group-hover:translate-x-1" aria-hidden="true" />
+              <span>{{ t().legal.terms }}</span>
+            </a>
+          </li>
+
+          <li>
+            <a
+              [routerLink]="['/legal', 'politica-de-privacidad']"
+              class="group flex items-center text-white/80 no-underline transition-colors hover:text-accent"
+            >
+              <tabler-icon icon="chevron-right" [size]="16" class="mr-2 shrink-0 transition-transform group-hover:translate-x-1" aria-hidden="true" />
+              <span>{{ t().legal.privacy }}</span>
+            </a>
+          </li>
+
+          <li>
+            <a
+              [routerLink]="['/legal', 'politica-de-cookies']"
+              class="group flex items-center text-white/80 no-underline transition-colors hover:text-accent"
+            >
+              <tabler-icon icon="chevron-right" [size]="16" class="mr-2 shrink-0 transition-transform group-hover:translate-x-1" aria-hidden="true" />
+              <span>{{ t().legal.cookies }}</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+
+    <!-- Línea inferior -->
+    <div
+      class="mt-8 flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-6 text-center text-sm text-white/65 md:mt-10 md:flex-row md:text-left"
+    >
+      <p>
+        © {{ currentYear }} Bame. {{ t().footer.rights }}.
+      </p>
+
+      <p class="text-white/45">
+        Bame v1.0.0
+      </p>
+    </div>
+  </div>
+</footer>

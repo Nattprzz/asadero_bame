@@ -1,0 +1,192 @@
+<div class="mx-auto w-full max-w-7xl px-4 md:px-6 py-8">
+  <h2 class="text-h2 font-semibold mb-6 underline underline-offset-6 decoration-[3px] decoration-accent w-fit">Reservas de hoy</h2>
+
+  @if (loading) {
+    <div class="flex items-center justify-center py-20 text-text-secondary gap-3">
+      <tabler-icon icon="refresh" [size]="24" class="animate-spin text-brand" />
+      <span>Cargando reservas...</span>
+    </div>
+  } @else if (error) {
+    <div class="rounded-xl border border-red-500 bg-red-50 px-6 py-4 text-red-700 dark:bg-red-900/20 dark:text-red-400 mb-6">
+      <tabler-icon icon="alert-triangle" [size]="20" class="inline mr-2" />
+      {{ error }}
+      <button type="button" (click)="cargarReservas()" class="ml-4 underline">Reintentar</button>
+    </div>
+  } @else {
+    @let metricas = getMetricasCargaTrabajo();
+    @let productosPendientes = getTotalesPorProductoPendiente();
+
+    <div class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-6">
+      <div class="col-span-1 md:col-span-2 grid grid-cols-2 gap-4">
+        <div class="rounded-xl border border-border-default bg-surface-card p-4 flex flex-col items-center justify-center">
+          <span class="text-sm font-medium text-text-secondary mb-1">Activos</span>
+          <span class="text-4xl font-black text-text-primary">{{ metricas.totalPendientes }}</span>
+        </div>
+        <div class="rounded-xl border border-border-default bg-surface-card p-4 flex flex-col items-center justify-center">
+          <span class="text-sm font-medium text-text-secondary mb-1">Completados</span>
+          <span class="text-4xl font-black text-success">{{ metricas.totalCompletadas }}</span>
+        </div>
+      </div>
+
+      <div class="col-span-1 md:col-span-3 rounded-xl border border-border-default bg-surface-card p-4">
+        <span class="text-sm font-medium text-text-secondary mb-2 block">Acumulado de productos</span>
+        @if (productosPendientes.length > 0) {
+          <div class="max-h-[160px] overflow-y-auto space-y-1.5 pr-1">
+            @for (item of productosPendientes; track item.nombre) {
+              <div class="flex items-center justify-between px-2 py-1.5 rounded-lg hover:bg-surface-muted transition-colors">
+                <span class="text-base font-bold text-text-primary">{{ item.nombre }}</span>
+                <span class="text-xl font-black text-text-primary">x{{ item.cantidad }}</span>
+              </div>
+            }
+          </div>
+        } @else {
+          <div class="flex items-center justify-center h-[100px] text-sm text-text-muted">
+            No hay productos activos.
+          </div>
+        }
+      </div>
+    </div>
+
+    <div class="mb-6 rounded-xl border border-border-default overflow-hidden">
+      <cdk-virtual-scroll-viewport
+        [itemSize]="80"
+        [minBufferPx]="400"
+        [maxBufferPx]="800"
+        style="height: 448px; width: 100%; overflow-x: auto"
+        class="bg-surface-card"
+        role="table"
+        aria-label="Reservas del día"
+      >
+        <div class="min-w-[860px]">
+          <div class="bg-surface-muted sticky top-0 z-10 border-b border-border-default">
+            <div class="flex">
+              <div class="px-4 py-3 text-center font-medium text-text-secondary uppercase tracking-wider w-[70px] shrink-0">
+                <button type="button" (click)="toggleSort('reserva')" class="flex items-center justify-center cursor-pointer w-full">
+                  #
+                  <span class="ml-2" [class.hidden]="sortKey !== 'reserva'">
+                    <tabler-icon [icon]="getSortIcon('reserva')" [size]="14" />
+                  </span>
+                </button>
+              </div>
+              <div class="px-4 py-3 text-left font-medium text-text-secondary uppercase tracking-wider w-[90px] shrink-0">
+                <button type="button" (click)="toggleSort('hora')" class="flex items-center cursor-pointer">
+                  Hora
+                  <span class="ml-2" [class.opacity-0]="sortKey !== 'hora'">
+                    <tabler-icon [icon]="getSortIcon('hora')" [size]="14" />
+                  </span>
+                </button>
+              </div>
+              <div class="px-4 py-3 text-left font-medium text-text-secondary uppercase tracking-wider flex-1 min-w-[160px]">
+                <button type="button" (click)="toggleSort('cliente')" class="flex items-center cursor-pointer w-full">
+                  Cliente
+                  <span class="ml-2" [class.opacity-0]="sortKey !== 'cliente'">
+                    <tabler-icon [icon]="getSortIcon('cliente')" [size]="14" />
+                  </span>
+                </button>
+              </div>
+              <div class="px-4 py-3 text-left font-medium text-text-secondary uppercase tracking-wider flex-2 min-w-[252px]">Productos</div>
+              <div class="px-4 py-3 text-left font-medium text-text-secondary uppercase tracking-wider w-[200px] shrink-0">
+                <button type="button" (click)="toggleSort('estado')" class="flex items-center cursor-pointer">
+                  Estado
+                  <span class="ml-2" [class.opacity-0]="sortKey !== 'estado'">
+                    <tabler-icon [icon]="getSortIcon('estado')" [size]="14" />
+                  </span>
+                </button>
+              </div>
+              <div class="px-4 py-3 text-right font-medium text-text-secondary uppercase tracking-wider w-[100px] shrink-0">Total</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="min-w-[860px]">
+          <div
+            *cdkVirtualFor="let r of sortedReservations(); trackBy: trackReservation"
+            class="flex border-b border-border-default"
+            role="row"
+            style="min-height: 80px"
+          >
+            <div class="px-4 w-[70px] shrink-0 flex items-center justify-center" role="cell">
+              <span class="font-bold text-base">{{ r.reserva }}</span>
+            </div>
+            <div class="px-4 w-[90px] shrink-0 flex items-center" role="cell">
+              <span class="text-lg font-bold">{{ r.hora }}</span>
+            </div>
+            <div class="px-4 flex-1 min-w-[160px] flex items-center" role="cell">
+              <span class="text-base font-semibold truncate" [title]="r.cliente">{{ r.cliente }}</span>
+            </div>
+            <div class="px-4 flex-2 min-w-[240px] flex flex-wrap items-center content-center gap-1.5" role="cell">
+              @for (p of r.productos; track $index) {
+                <span class="inline-block bg-surface-muted rounded-xl px-2 py-1 text-sm font-bold">
+                  {{ p.nombre }} x{{ p.cantidad }}
+                </span>
+              }
+            </div>
+            <div class="px-4 w-[200px] shrink-0 flex items-center" role="cell">
+              <div class="relative inline-block w-full">
+                <button
+                  type="button"
+                  cdkOverlayOrigin
+                  #trigger="cdkOverlayOrigin"
+                  [attr.aria-haspopup]="'listbox'"
+                  [attr.aria-expanded]="isDropdownOpen(r.id)"
+                  (click)="toggleDropdown(r.id)"
+                  (keydown)="onTriggerKeydown($event, r.id)"
+                  [disabled]="r.isUpdating"
+                  class="w-full flex items-center justify-between gap-2 py-2 px-3 rounded-xl border-2 font-black cursor-pointer transition-colors disabled:opacity-50 text-sm"
+                  [ngClass]="getEstadoClases(r.estado)"
+                >
+                  <span class="font-black truncate">{{ r.estado }}</span>
+                  @if (r.isUpdating) {
+                    <tabler-icon icon="rotate-clockwise" [size]="14" class="animate-spin shrink-0" />
+                  } @else {
+                    <tabler-icon icon="chevron-down" [size]="14" class="transition-transform duration-200 shrink-0" [class.rotate-180]="isDropdownOpen(r.id)" />
+                  }
+                </button>
+
+                <ng-template
+                  cdkConnectedOverlay
+                  [cdkConnectedOverlayOrigin]="trigger"
+                  [cdkConnectedOverlayOpen]="isDropdownOpen(r.id)"
+                  [cdkConnectedOverlayHasBackdrop]="true"
+                  cdkConnectedOverlayBackdropClass="cdk-overlay-transparent-backdrop"
+                  (backdropClick)="toggleDropdown(r.id)"
+                  [cdkConnectedOverlayPositions]="positions"
+                  [cdkConnectedOverlayScrollStrategy]="scrollStrategy"
+                  [cdkConnectedOverlayWidth]="'100%'"
+                >
+                  <div
+                    role="listbox"
+                    [attr.aria-label]="'Estado de reserva ' + r.reserva"
+                    (keydown)="onListboxKeydown($event)"
+                    class="rounded-xl border-2 border-border-default bg-surface-card shadow-lg overflow-hidden"
+                    cdkTrapFocusAutoCapture
+                    cdkTrapFocus
+                  >
+                    @for (est of estados; track est; let i = $index) {
+                      <div
+                        role="option"
+                        [attr.aria-selected]="r.estado === est"
+                        (click)="selectStatus(r, est)"
+                        [class.font-black]="r.estado === est"
+                        class="px-4 py-3 text-sm font-semibold cursor-pointer hover:bg-surface-muted transition-colors"
+                      >
+                        {{ est }}
+                      </div>
+                    }
+                  </div>
+                </ng-template>
+              </div>
+            </div>
+            <div class="px-4 w-[100px] shrink-0 flex items-center justify-end text-right" role="cell">
+              <span class="text-base font-bold">{{ calcularTotal(r) | currency: 'EUR' }}</span>
+            </div>
+          </div>
+        </div>
+      </cdk-virtual-scroll-viewport>
+
+      @if (sortedReservations().length === 0) {
+        <div class="px-4 py-8 text-center text-text-muted">No hay reservas para hoy.</div>
+      }
+    </div>
+  }
+</div>

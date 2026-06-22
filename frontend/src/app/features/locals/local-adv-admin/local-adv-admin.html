@@ -1,0 +1,299 @@
+﻿<div class="mx-auto w-full max-w-7xl px-4 md:px-6 py-8">
+  <div class="mb-8 pb-4">
+    <h1
+      class="font-display text-h2 md:text-h1 uppercase tracking-wide leading-none text-text-primary mb-1 underline underline-offset-6 decoration-[3px] decoration-accent w-fit"
+    >
+      Configuración Avanzada
+    </h1>
+    <p class="mt-1 text-text-secondary">
+      Configura la identidad del local, horarios y datos de contacto.
+    </p>
+  </div>
+
+  @if (isLoading) {
+    <div class="flex items-center gap-3 py-12 text-text-muted">
+      <tabler-icon icon="refresh" [size]="20" class="animate-spin" />
+      <span>Cargando datos del local…</span>
+    </div>
+  }
+
+  @if (loadError) {
+    <div class="mb-6 flex items-start gap-3 rounded-xl border border-red-500/30 bg-red-500/10 p-4" role="alert">
+      <tabler-icon icon="alert-triangle" [size]="20" class="mt-0.5 shrink-0 text-red-500" />
+      <div>
+        <p class="font-medium text-red-600">{{ loadError }}</p>
+        <button
+          type="button"
+          (click)="retryLoad()"
+          class="mt-2 text-sm font-bold text-red-600 underline hover:no-underline focus-visible:outline-none"
+        >
+          Reintentar
+        </button>
+      </div>
+    </div>
+  }
+
+  @if (!isLoading && !loadError) {
+  <form [formGroup]="localForm" (ngSubmit)="saveChanges()">
+    <!-- Datos del Local -->
+    <h2
+      class="mb-4 text-h2 font-semibold underline underline-offset-6 decoration-[3px] decoration-accent w-fit"
+    >
+      Datos del Local
+    </h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-15">
+      <!-- Nombre del Local -->
+      <div>
+        <label for="storeName" class="block font-medium text-body text-text-secondary"
+          >Nombre del Local</label
+        >
+        <p class="mb-1 text-xs text-text-muted">Nombre comercial del establecimiento.</p>
+        <input
+          type="text"
+          id="storeName"
+          formControlName="storeName"
+          class="w-full px-4 py-3 rounded-lg border border-form-border focus:outline-none focus:ring-2 focus:ring-accent/30"
+        />
+      </div>
+
+      <!-- Teléfono -->
+      <div>
+        <label for="phone" class="block font-medium text-body text-text-secondary">Teléfono</label>
+        <p class="mb-1 text-xs text-text-muted">Teléfono de contacto del local.</p>
+        <div class="flex">
+          <span
+            class="inline-flex items-center px-4 py-3 rounded-l-lg border border-r-0 border-form-border bg-surface-muted text-text-secondary font-medium text-body"
+          >
+            +34
+          </span>
+          <input
+            type="tel"
+            id="phone"
+            formControlName="phone"
+            class="w-full px-4 py-3 rounded-r-lg border border-form-border focus:outline-none focus:ring-2 focus:ring-accent/30 placeholder:text-form-placeholder"
+          />
+        </div>
+      </div>
+
+      <!-- Dirección -->
+      <div class="md:col-span-2">
+        <label for="address" class="block font-medium text-body text-text-secondary"
+          >Dirección</label
+        >
+        <p class="mb-1 text-xs text-text-muted">Dirección física del establecimiento.</p>
+        <input
+          type="text"
+          id="address"
+          formControlName="address"
+          class="w-full px-4 py-3 rounded-lg border border-form-border focus:outline-none focus:ring-2 focus:ring-accent/30 placeholder:text-form-placeholder"
+          placeholder="Calle, número, ciudad..."
+        />
+      </div>
+
+      <!-- Coordenadas -->
+      <div class="md:col-span-2">
+        <label for="coordinates" class="block font-medium text-body text-text-secondary"
+          >Coordenadas</label
+        >
+        <p class="mb-1 text-xs text-text-muted">
+          Coordenadas geográficas (latitud, longitud) para mostrar en el mapa.
+        </p>
+        <input
+          type="text"
+          id="coordinates"
+          formControlName="coordinates"
+          class="w-full px-4 py-3 rounded-lg border border-form-border focus:outline-none focus:ring-2 focus:ring-accent/30 placeholder:text-form-placeholder"
+          placeholder="37.XXXXX, -1.XXXXX"
+        />
+      </div>
+
+      <!-- Horario de Apertura del Local -->
+      <div>
+        <label for="openingTime" class="block font-medium text-body text-text-secondary"
+          >Hora de Apertura del Local</label
+        >
+        <p class="mb-1 text-xs text-text-muted">Hora de inicio de la jornada laboral.</p>
+        <input
+          type="time"
+          id="openingTime"
+          formControlName="openingTime"
+          class="w-full px-4 py-3 rounded-lg border border-form-border focus:outline-none focus:ring-2 focus:ring-accent/30"
+        />
+      </div>
+
+      <!-- Horario de Cierre del Local -->
+      <div>
+        <label for="closingTime" class="block font-medium text-body text-text-secondary"
+          >Hora de Cierre del Local</label
+        >
+        <p class="mb-1 text-xs text-text-muted">Hora de fin de la jornada laboral.</p>
+        <input
+          type="time"
+          id="closingTime"
+          formControlName="closingTime"
+          (change)="updateReservationValidation()"
+          class="w-full px-4 py-3 rounded-lg border border-form-border focus:outline-none focus:ring-2 focus:ring-accent/30"
+        />
+      </div>
+
+      <!-- Horario de Apertura de Reservas -->
+      <div>
+        <label for="reservationOpeningTime" class="block font-medium text-body text-text-secondary"
+          >Hora de Apertura de Reservas</label
+        >
+        @if (hasFieldError('reservationOpeningTime')) {
+          <p class="mb-1 text-sm text-red-500">{{ getFieldError('reservationOpeningTime') }}</p>
+        } @else {
+          <p class="mb-1 text-xs text-text-muted">
+            Debe ser anterior o igual a la hora de cierre del local.
+          </p>
+        }
+        <input
+          type="time"
+          id="reservationOpeningTime"
+          formControlName="reservationOpeningTime"
+          class="w-full px-4 py-3 rounded-lg border border-form-border focus:outline-none focus:ring-2 focus:ring-accent/30"
+        />
+      </div>
+
+      <!-- Horario de Cierre de Reservas -->
+      <div>
+        <label for="reservationClosingTime" class="block font-medium text-body text-text-secondary"
+          >Hora de Cierre de Reservas</label
+        >
+        @if (hasFieldError('reservationClosingTime')) {
+          <p class="mb-1 text-sm text-red-500">{{ getFieldError('reservationClosingTime') }}</p>
+        } @else {
+          <p class="mb-1 text-xs text-text-muted">
+            Debe ser anterior o igual a la hora de cierre del local.
+          </p>
+        }
+        <input
+          type="time"
+          id="reservationClosingTime"
+          formControlName="reservationClosingTime"
+          class="w-full px-4 py-3 rounded-lg border border-form-border focus:outline-none focus:ring-2 focus:ring-accent/30"
+        />
+      </div>
+
+      <!-- Días de Apertura -->
+      <div class="md:col-span-2">
+        <label class="block font-medium text-body text-text-secondary">Días de Apertura</label>
+        <p class="mb-1 text-xs text-text-muted">Selecciona los días que abre el local.</p>
+        <div class="flex flex-wrap gap-2">
+          @for (day of weekDays; track day.key) {
+            <label class="cursor-pointer">
+              <input
+                type="checkbox"
+                [checked]="localForm.get(day.key)?.value"
+                (change)="toggleDay(day.key, $event)"
+                class="sr-only peer"
+                alt="{{ day.label }}"
+                title="{{ day.label }}"
+              />
+              <span
+                class="inline-block px-4 py-2 rounded-full border text-body font-medium transition-colors peer-checked:bg-brand peer-checked:text-text-inverse peer-checked:border-transparent bg-surface-card border-form-border text-text-secondary hover:border-text-secondary"
+                [title]="day.full"
+              >
+                {{ day.label }}
+              </span>
+            </label>
+          }
+        </div>
+      </div>
+    </div>
+
+    <!-- Gestión de Productos -->
+    <h2
+      class="mb-4 text-h2 font-semibold underline underline-offset-6 decoration-[3px] decoration-accent w-fit"
+    >
+      Gestión de Productos
+    </h2>
+
+    <div class="overflow-hidden rounded-xl border border-border-default">
+      <table class="w-full">
+        <thead class="bg-surface-muted">
+          <tr>
+            <th class="text-center px-4 py-2 font-medium text-text-muted tracking-wider">Vender</th>
+            <th class="text-left px-4 py-2 font-medium text-text-muted tracking-wider">
+              Nombre del Producto
+            </th>
+            <th class="text-right px-4 py-2 font-medium text-text-muted tracking-wider">
+              Precio Base
+            </th>
+            <th class="px-4 py-2 font-medium text-text-muted tracking-wider">Precio Local</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-border-default">
+          @for (product of products(); track product.id) {
+            <tr>
+              <td class="py-4 px-6 text-center">
+                <input
+                  type="checkbox"
+                  (change)="toggleProduct(product, $event)"
+                  [checked]="product.isSoldHere"
+                  class="w-5 h-5"
+                />
+              </td>
+              <td class="py-4 px-6">{{ product.name }}</td>
+              <td class="py-4 px-6 text-right">{{ product.defaultPrice }} €</td>
+              <td class="py-4 px-6 text-right">
+                <div class="relative inline-block w-28">
+                  <input
+                    type="number"
+                    [disabled]="!product.isSoldHere"
+                    [value]="product.localPrice !== null ? product.localPrice : ''"
+                    (input)="updatePrice(product, $event)"
+                    step="0.01"
+                    min="0"
+                    class="w-full pl-3 pr-8 py-1.5 text-right border border-form-border rounded focus:outline-none focus:ring-1 focus:ring-accent/40 disabled:bg-surface-muted"
+                    placeholder="0.00"
+                  />
+                  <span class="absolute inset-y-0 right-0 flex items-center pr-3 text-text-muted"
+                    >€</span
+                  >
+                </div>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="4" class="py-8 text-center text-text-muted">
+                No hay productos disponibles.
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Botones de acción -->
+    <div class="flex flex-col items-end pt-6 border-t border-border-default">
+      <button
+        type="button"
+        (click)="saveChanges()"
+        class="px-8 py-3 bg-brand hover:bg-brand-hover text-text-inverse font-bold rounded-xl transition-colors"
+      >
+        Guardar Cambios
+      </button>
+
+      <div
+        class="mt-4 px-4 py-2 rounded-lg text-body font-medium"
+        [class.opacity-0]="!notification()"
+        [class.bg-success/10]="notification()?.type === 'success'"
+        [class.text-success]="notification()?.type === 'success'"
+        [class.bg-brand/10]="notification()?.type === 'error'"
+        [class.text-brand]="notification()?.type === 'error'"
+      >
+        @if (notification()) {
+          <tabler-icon icon="circle-check" [size]="20" class="text-success" [class.hidden]="notification()?.type === 'error'" />
+          <tabler-icon icon="circle-minus" [size]="20" class="text-brand" [class.hidden]="notification()?.type === 'success'" />
+          {{ notification()?.text }}
+        } @else {
+          <span class="invisible">Placeholder para mantener el alto</span>
+        }
+      </div>
+    </div>
+  </form>
+  } <!-- end @if (!isLoading && !loadError) -->
+</div>

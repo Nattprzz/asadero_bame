@@ -1,0 +1,73 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# security.yaml — configuración de autenticación y autorización.
+#
+# Define los roles de usuario, el sistema de autenticación utilizado por la
+# API y las reglas de acceso a cada uno de los endpoints del proyecto.
+# ─────────────────────────────────────────────────────────────────────────────
+
+security:
+    # ─── Jerarquía de roles ───────────────────────────────────────────────────
+    # Cada rol hereda automáticamente los permisos del nivel inferior.
+    role_hierarchy:
+        ROLE_RESPONSABLE: ROLE_USER
+        ROLE_GERENTE: ROLE_RESPONSABLE
+        ROLE_ADMIN: ROLE_GERENTE
+
+    # ─── Configuración de contraseñas ─────────────────────────────────────────
+    password_hashers:
+        App\Entity\User:
+            algorithm: auto
+
+    # ─── Proveedor de usuarios ────────────────────────────────────────────────
+    providers:
+        app_user_provider:
+            entity:
+                class: App\Entity\User
+                property: email
+
+    # ─── Firewalls de seguridad ───────────────────────────────────────────────
+    firewalls:
+        # Excluye recursos internos y estáticos del sistema de seguridad.
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+
+        # Protege los endpoints de la API mediante autenticación por token.
+        api:
+            pattern: ^/api
+            stateless: true
+            custom_authenticators:
+                - App\Security\BearerTokenAuthenticator
+
+    # ─── Control de acceso a rutas ────────────────────────────────────────────
+    access_control:
+        # Webhook público utilizado por Stripe para recibir eventos.
+        - { path: ^/api/payments/stripe/webhook$, roles: PUBLIC_ACCESS }
+
+        # Creación de sesiones de pago para usuarios autenticados.
+        - { path: ^/api/payments/stripe/create-checkout-session$, roles: IS_AUTHENTICATED_FULLY }
+
+        # Endpoints públicos de autenticación.
+        - { path: ^/api/v1/auth/(login|register|forgot-password|reset-password)$, roles: PUBLIC_ACCESS }
+
+        # Recursos públicos de consulta.
+        - { path: ^/api/v1/products, roles: PUBLIC_ACCESS }
+        - { path: ^/api/v1/productos, roles: PUBLIC_ACCESS }
+        - { path: ^/api/v1/categories, roles: PUBLIC_ACCESS }
+        - { path: ^/api/v1/categorias, roles: PUBLIC_ACCESS }
+        - { path: ^/api/v1/allergens, roles: PUBLIC_ACCESS }
+        - { path: ^/api/v1/locals, roles: PUBLIC_ACCESS }
+        - { path: ^/api/v1/locales, roles: PUBLIC_ACCESS }
+
+        # Área de administración exclusiva para administradores.
+        - { path: ^/api/v1/admin/users, roles: ROLE_ADMIN }
+        # El GERENTE puede actualizar la configuración de su propio local (scope validado en el controlador).
+        - { path: ^/api/v1/admin/(locals|locales)/\d+$, methods: [PUT, PATCH], roles: ROLE_GERENTE }
+        # Listar, crear y eliminar locales solo para ADMIN.
+        - { path: ^/api/v1/admin/(locals|locales), roles: ROLE_ADMIN }
+        - { path: ^/api/v1/admin/(categories|categorias|allergens|alergenos|metrics|recent-orders), roles: ROLE_ADMIN }
+        - { path: ^/api/v1/admin/(products|productos|orders|pedidos), roles: ROLE_RESPONSABLE }
+        - { path: ^/api/v1/admin, roles: ROLE_ADMIN }
+
+        # El resto de la API requiere autenticación.
+        - { path: ^/api/v1, roles: IS_AUTHENTICATED_FULLY }

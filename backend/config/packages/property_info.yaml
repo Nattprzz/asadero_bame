@@ -1,0 +1,11 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# property_info.yaml — configuración de análisis de propiedades.
+#
+# Permite a Symfony obtener información sobre las propiedades de los objetos,
+# facilitando tareas como la serialización, validación o documentación.
+# ─────────────────────────────────────────────────────────────────────────────
+
+framework:
+    property_info:
+        # Permite analizar las propiedades definidas mediante constructores.
+        with_constructor_extractor: true

@@ -1,0 +1,27 @@
+<div
+  class="mx-auto flex min-h-[60vh] w-full max-w-7xl flex-col items-center justify-center px-4 py-16 text-center md:px-6"
+>
+  <div class="mb-6">
+    <span class="font-display text-8xl font-bold text-text-muted/30 md:text-9xl">
+      401
+    </span>
+  </div>
+
+  <h1
+    class="mb-4 w-fit font-display text-h1 uppercase tracking-wide leading-none text-text-primary underline underline-offset-6 decoration-[3px] decoration-accent"
+  >
+    Autenticación requerida
+  </h1>
+
+  <p class="mb-8 max-w-xl text-body text-text-muted">
+    Debes iniciar sesión para acceder a esta página. Vuelve al inicio y abre el menú de usuario para continuar.
+  </p>
+
+  <a
+    routerLink="/home"
+    class="inline-flex items-center gap-2 rounded-xl bg-brand px-8 py-3 font-bold text-text-inverse transition-colors hover:bg-brand-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/50 focus-visible:ring-offset-2"
+  >
+    <tabler-icon icon="home" [size]="20" aria-hidden="true" />
+    <span>Volver al inicio</span>
+  </a>
+</div>

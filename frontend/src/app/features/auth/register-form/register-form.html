@@ -1,0 +1,201 @@
+<div class="w-full max-w-md bg-form-bg p-6 md:p-10 rounded-2xl">
+  <h2 class="text-center font-bold text-h2 mb-6 text-text-primary">Registrarse</h2>
+
+  <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" novalidate>
+    @if (registerError) {
+      <div
+        class="mb-5 flex items-start gap-2 rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-3"
+        role="alert"
+        aria-live="assertive"
+      >
+        <p class="text-sm font-medium text-red-600">{{ registerError }}</p>
+      </div>
+    }
+
+    <p class="mb-5 text-text-muted text-sm">
+      Los campos marcados con '<span class="text-red-500 font-bold">*</span>' son obligatorios.
+    </p>
+
+    <div class="mb-4">
+      <label for="nombre" class="block mb-2 text-body font-medium text-text-secondary"
+        >Nombre <span class="text-red-500 font-bold">*</span></label
+      >
+      <input
+        type="text"
+        id="nombre"
+        cdkFocusInitial
+        class="w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 transition-colors text-body text-text-primary"
+        [class.border-red-500]="isFieldInvalid('nombre')"
+        [class.focus:ring-red-200]="isFieldInvalid('nombre')"
+        [class.border-form-border]="!isFieldInvalid('nombre')"
+        [class.focus:border-accent]="!isFieldInvalid('nombre')"
+        [class.focus:ring-accent]="!isFieldInvalid('nombre')"
+        formControlName="nombre"
+        aria-required="true"
+      />
+      <div class="mt-1 min-h-[1.25rem]">
+        @if (isFieldInvalid('nombre')) {
+          <div class="text-red-500 text-sm">
+            @if (getServerFieldError('nombre')) {
+              {{ getServerFieldError('nombre') }}
+            } @else {
+              El nombre es obligatorio.
+            }
+          </div>
+        }
+      </div>
+    </div>
+
+    <div class="mb-4">
+      <label for="email" class="block mb-2 text-body font-medium text-text-secondary"
+        >Correo electrónico <span class="text-red-500 font-bold">*</span></label
+      >
+      <input
+        type="email"
+        id="email"
+        class="w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 transition-colors text-body text-text-primary placeholder:text-form-placeholder"
+        [class.border-red-500]="isFieldInvalid('email')"
+        [class.focus:ring-red-200]="isFieldInvalid('email')"
+        [class.border-form-border]="!isFieldInvalid('email')"
+        [class.focus:border-accent]="!isFieldInvalid('email')"
+        [class.focus:ring-accent]="!isFieldInvalid('email')"
+        formControlName="email"
+        placeholder="nombre@ejemplo.com"
+        aria-required="true"
+      />
+      <div class="mt-1 min-h-[1.25rem]">
+        @if (isFieldInvalid('email')) {
+          <div class="text-red-500 text-sm">
+            @if (getServerFieldError('email')) {
+              <span>{{ getServerFieldError('email') }}</span>
+            } @else if (registerForm.get('email')?.hasError('required')) {
+              <span>El correo es obligatorio.</span>
+            } @else if (registerForm.get('email')?.hasError('email')) {
+              <span>Introduce un correo válido.</span>
+            }
+          </div>
+        }
+      </div>
+    </div>
+
+    <div class="mb-4">
+      <label for="phone" class="block mb-2 text-body font-medium text-text-secondary"
+        >Número de teléfono <span class="text-red-500 font-bold">*</span></label
+      >
+      <div id="help-tel" class="mb-2 text-text-muted text-sm">
+        Solo los 9 dígitos, comenzando por 6, 7, 8 o 9 (ej: 604265251).
+      </div>
+      <div class="flex">
+        <span
+          class="inline-flex items-center px-4 py-3 rounded-l-lg border border-r-0 border-form-border bg-surface-muted text-text-secondary font-medium text-body"
+          >+34</span
+        >
+        <input
+          type="tel"
+          id="phone"
+          class="flex-1 min-w-0 px-4 py-3 rounded-r-lg border focus:outline-none focus:ring-2 transition-colors text-body text-text-primary"
+          [class.border-red-500]="isFieldInvalid('phone')"
+          [class.focus:ring-red-200]="isFieldInvalid('phone')"
+          [class.border-form-border]="!isFieldInvalid('phone')"
+          [class.focus:border-accent]="!isFieldInvalid('phone')"
+          [class.focus:ring-accent]="!isFieldInvalid('phone')"
+          formControlName="phone"
+          maxlength="9"
+          aria-describedby="prefijo-pais help-tel"
+          aria-required="true"
+        />
+      </div>
+      <div class="mt-1 min-h-[1.25rem]">
+        @if (isFieldInvalid('phone')) {
+          <div class="text-red-500 text-sm">
+            @if (getServerFieldError('phone')) {
+              {{ getServerFieldError('phone') }}
+            } @else {
+              Introduce un móvil español válido (ej: 604265251).
+            }
+          </div>
+        }
+      </div>
+    </div>
+
+    <div class="mb-4">
+      <label for="password" class="block mb-2 text-body font-medium text-text-secondary"
+        >Contraseña <span class="text-red-500 font-bold">*</span></label
+      >
+      <div id="help-pass" class="mb-2 text-text-muted text-sm">Mínimo 8 caracteres.</div>
+      <input
+        type="password"
+        id="password"
+        class="w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 transition-colors text-body text-text-primary"
+        [class.border-red-500]="isFieldInvalid('password')"
+        [class.focus:ring-red-200]="isFieldInvalid('password')"
+        [class.border-form-border]="!isFieldInvalid('password')"
+        [class.focus:border-accent]="!isFieldInvalid('password')"
+        [class.focus:ring-accent]="!isFieldInvalid('password')"
+        formControlName="password"
+        aria-describedby="help-pass"
+        aria-required="true"
+      />
+      <div class="mt-1 min-h-[1.25rem]">
+        @if (isFieldInvalid('password')) {
+          <div class="text-red-500 text-sm">
+            @if (getServerFieldError('password')) {
+              {{ getServerFieldError('password') }}
+            } @else {
+              La contraseña debe tener al menos 8 caracteres.
+            }
+          </div>
+        }
+      </div>
+    </div>
+
+    <div class="mb-6">
+      <div class="flex items-start">
+        <div class="flex items-center h-6">
+          <input
+            type="checkbox"
+            id="terminos"
+            formControlName="terminos"
+            class="w-5 h-5 accent-[#FFD700] border-form-border rounded focus:ring-2 focus:ring-accent/40 cursor-pointer"
+            [class.border-red-500]="isFieldInvalid('terminos')"
+            aria-required="true"
+          />
+        </div>
+        <div class="ml-3 text-body">
+          <label class="font-medium text-text-secondary cursor-pointer select-none" for="terminos">
+            <a href="javascript:void(0)" class="text-text-link hover:underline"
+              >Acepto la política de privacidad</a
+            >
+            <span class="text-red-500 font-bold">*</span>
+          </label>
+        </div>
+      </div>
+      <div class="mt-1 min-h-[1.25rem] ml-8">
+        @if (isFieldInvalid('terminos')) {
+          <div class="text-red-500 text-sm">
+            Debes aceptar la política de privacidad para continuar.
+          </div>
+        }
+      </div>
+    </div>
+
+    <button
+      type="submit"
+      [disabled]="isRegistering"
+      class="w-full bg-brand hover:bg-brand-hover text-text-inverse font-bold py-3 px-4 rounded-lg text-btn transition-colors shadow-sm active:scale-[0.98] mb-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/50 disabled:cursor-not-allowed disabled:opacity-60"
+    >
+      @if (isRegistering) { Creando cuenta… } @else { Registrarse }
+    </button>
+
+    <div class="text-center">
+      <span class="text-text-muted text-sm">¿Ya tienes cuenta? </span>
+      <button
+        type="button"
+        (click)="switchToLogin.emit()"
+        class="text-text-link font-bold hover:underline text-sm cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/50 rounded"
+      >
+        Inicia sesión
+      </button>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit bootstrap="tests/bootstrap.php" colors="true">
+  <php>
+    <ini name="display_errors" value="1"/>
+    <server name="APP_ENV" value="test" force="true"/>
+    <server name="APP_DEBUG" value="1" force="true"/>
+    <!-- DATABASE_URL debe venir de .env.test o .env.test.local y apuntar a una BD local aislada. -->
+    <server name="SHELL_VERBOSITY" value="-1"/>
+  </php>
+  <testsuites>
+    <testsuite name="Project Test Suite">
+      <directory>tests</directory>
+    </testsuite>
+  </testsuites>
+</phpunit>

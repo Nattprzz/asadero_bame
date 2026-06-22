@@ -1,0 +1,239 @@
+<div class="auth-shell">
+  <nav class="auth-navbar" aria-label="Navegación de autenticación">
+    <div class="navbar-inner">
+      <a routerLink="/home" class="brand" aria-label="Ir al inicio de BAME">
+        <span class="brand-mark" aria-hidden="true">B</span>
+        <span class="brand-copy"><strong>BAME</strong><small>Asador tradicional</small></span>
+      </a>
+
+      <div class="navbar-actions">
+        <div class="a11y-control" aria-label="Opciones de accesibilidad">
+          <app-accessibility-menu />
+          <span class="a11y-label" aria-hidden="true">A<sup>+</sup></span>
+        </div>
+
+        <button
+          type="button"
+          class="theme-toggle"
+          (click)="toggleTheme()"
+          [attr.aria-label]="userPref.effectiveTheme() === 'dark' ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'"
+        >
+          <span class="theme-dot" aria-hidden="true"></span>
+          <span class="theme-label">{{ userPref.effectiveTheme() === 'dark' ? 'Modo claro' : 'Modo oscuro' }}</span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <main class="auth-main">
+    <aside class="loyalty-panel" aria-labelledby="loyalty-title">
+      <span class="eyebrow">Área de clientes</span>
+      <h1 id="loyalty-title">Reserva tu pollo asado <br>sin colas ni esperas</h1>
+      <p>Accede a tu cuenta para consultar pedidos, guardar tus datos y reservar en tu asadero favorito.</p>
+
+      <ul class="perks">
+        @for (perk of perks; track perk.text) {
+          <li>
+            <span class="perk-icon" aria-hidden="true">{{ perk.icon }}</span>
+            <span>{{ perk.text }}</span>
+          </li>
+        }
+      </ul>
+    </aside>
+
+    <section class="form-column" aria-label="Formulario de acceso">
+      <div class="auth-card">
+        @if (done()) {
+          <div class="success-state" role="status" aria-live="polite">
+            <span class="success-icon" aria-hidden="true">✓</span>
+            <h2>{{ isRegister() ? 'Registro completado' : 'Inicio de sesión completado' }}</h2>
+            <p>{{ isRegister() ? 'Tu cuenta se ha creado correctamente.' : 'Has iniciado sesión correctamente.' }}</p>
+            <button type="button" class="primary-button" (click)="continueAfterSuccess()">Continuar</button>
+          </div>
+        } @else {
+          <div class="tabs" role="tablist" aria-label="Cambiar entre iniciar sesión y registrarse">
+            <button type="button" role="tab" [attr.aria-selected]="!isRegister()" [class.active]="!isRegister()" (click)="setMode('login')">
+              Iniciar sesión
+            </button>
+            <button type="button" role="tab" [attr.aria-selected]="isRegister()" [class.active]="isRegister()" (click)="setMode('register')">
+              Registrarse
+            </button>
+          </div>
+
+          <header class="card-header">
+            <h2>{{ isRegister() ? 'Crear cuenta' : 'Iniciar sesión' }}</h2>
+            <p>{{ isRegister() ? 'Crea tu cuenta para gestionar tus reservas.' : 'Accede para continuar con tus reservas.' }}</p>
+          </header>
+
+          <form [formGroup]="authForm" (ngSubmit)="onSubmit()" novalidate>
+            <p class="required-legend" aria-hidden="true">
+              <small><span class="required-mark">*</span> Campos obligatorios</small>
+            </p>
+
+            @if (isRegister()) {
+              <div class="field-group">
+                <label for="auth-name">Nombre <span class="required-mark" aria-hidden="true">*</span></label>
+                <input
+                  id="auth-name"
+                  type="text"
+                  cdkFocusInitial
+                  formControlName="name"
+                  autocomplete="name"
+                  placeholder="Tu nombre"
+                  aria-required="true"
+                  [class.invalid]="isFieldInvalid('name')"
+                  [attr.aria-invalid]="isFieldInvalid('name')"
+                  [attr.aria-describedby]="isFieldInvalid('name') ? 'name-error' : null"
+                />
+                @if (isFieldInvalid('name')) {
+                  <p id="name-error" class="field-error">{{ fieldError('name') }}</p>
+                }
+              </div>
+            }
+
+            <div class="field-group">
+              <label for="auth-email">Email <span class="required-mark" aria-hidden="true">*</span></label>
+              <input
+                id="auth-email"
+                type="email"
+                formControlName="email"
+                autocomplete="email"
+                placeholder="tu@email.com"
+                aria-required="true"
+                [class.invalid]="isFieldInvalid('email')"
+                [attr.aria-invalid]="isFieldInvalid('email')"
+                [attr.aria-describedby]="isFieldInvalid('email') ? 'email-error' : null"
+              />
+              @if (isFieldInvalid('email')) {
+                <p id="email-error" class="field-error">{{ fieldError('email') }}</p>
+              }
+            </div>
+
+            @if (isRegister()) {
+              <div class="field-group">
+                <label for="auth-phone">Teléfono <span class="required-mark" aria-hidden="true">*</span></label>
+                <input
+                  id="auth-phone"
+                  type="tel"
+                  formControlName="phone"
+                  autocomplete="tel"
+                  inputmode="numeric"
+                  placeholder="600 000 000"
+                  maxlength="9"
+                  aria-required="true"
+                  [class.invalid]="isFieldInvalid('phone')"
+                  [attr.aria-invalid]="isFieldInvalid('phone')"
+                  [attr.aria-describedby]="isFieldInvalid('phone') ? 'phone-error' : null"
+                />
+                @if (isFieldInvalid('phone')) {
+                  <p id="phone-error" class="field-error">{{ fieldError('phone') }}</p>
+                }
+              </div>
+            }
+
+            <div class="field-group">
+              <div class="label-row">
+                <label for="auth-password">Contraseña <span class="required-mark" aria-hidden="true">*</span></label>
+                @if (!isRegister()) {
+                  <a routerLink="/home/recuperar-contrasena" class="forgot-link">¿Has olvidado tu contraseña?</a>
+                }
+              </div>
+
+              <div class="password-wrap">
+                <input
+                  id="auth-password"
+                  [type]="showPassword() ? 'text' : 'password'"
+                  formControlName="password"
+                  [autocomplete]="isRegister() ? 'new-password' : 'current-password'"
+                  placeholder="••••••••"
+                  aria-required="true"
+                  [class.invalid]="isFieldInvalid('password')"
+                  [attr.aria-invalid]="isFieldInvalid('password')"
+                  [attr.aria-describedby]="isFieldInvalid('password') ? 'password-error' : null"
+                />
+                <button
+                  type="button"
+                  class="password-toggle"
+                  (click)="togglePassword()"
+                  [attr.aria-label]="showPassword() ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+                >
+                  {{ showPassword() ? 'Ocultar' : 'Mostrar' }}
+                </button>
+              </div>
+
+              @if (isFieldInvalid('password')) {
+                <p id="password-error" class="field-error">{{ fieldError('password') }}</p>
+              }
+
+              @if (isRegister()) {
+                <div
+                  class="strength-bars"
+                  role="meter"
+                  aria-label="Seguridad de la contraseña"
+                  aria-valuemin="0"
+                  aria-valuemax="3"
+                  [attr.aria-valuenow]="passwordStrength()"
+                >
+                  @for (bar of [1, 2, 3]; track bar) {
+                    <span
+                      [class.filled]="passwordStrength() >= bar"
+                      [class.weak]="passwordStrength() === 1"
+                      [class.medium]="passwordStrength() === 2"
+                      [class.strong]="passwordStrength() === 3"
+                    ></span>
+                  }
+                </div>
+                <p class="strength-label">Seguridad: {{ strengthLabel() }}</p>
+              }
+            </div>
+
+            @if (isRegister()) {
+              <div class="terms-group">
+                <input id="auth-terms" type="checkbox" formControlName="terms" aria-required="true" />
+                <label for="auth-terms">
+                  Acepto los <a routerLink="/legal/terminos">términos y condiciones</a> y la
+                  <a routerLink="/legal/privacidad">política de privacidad</a>.
+                  <span class="required-mark" aria-hidden="true">*</span>
+                </label>
+              </div>
+
+              @if (isFieldInvalid('terms')) {
+                <p id="terms-error" class="field-error terms-error">{{ fieldError('terms') }}</p>
+              }
+            }
+
+            @if (submitError()) {
+              <div class="submit-error" role="alert" aria-live="assertive">{{ submitError() }}</div>
+            }
+
+            <button type="submit" class="primary-button" [disabled]="loading()">
+              @if (loading()) {
+                <span class="spinner" aria-hidden="true"></span>
+                <span>Cargando...</span>
+              } @else {
+                <span>{{ isRegister() ? 'Registrarse' : 'Iniciar sesión' }}</span>
+              }
+            </button>
+
+            <div class="divider" aria-hidden="true">
+              <span></span>
+              <small>O continúa con</small>
+              <span></span>
+            </div>
+
+            <div class="social-buttons">
+              @for (social of socials; track social.name) {
+                <button type="button" [attr.aria-label]="'Continuar con ' + social.name">
+                  <span aria-hidden="true">{{ social.shortName }}</span>
+                  <span class="social-name">{{ social.name }}</span>
+                </button>
+              }
+            </div>
+
+            <a routerLink="/home/carta" class="guest-link">Ver carta sin iniciar sesión</a>
+          </form>
+        }
+      </div>
+    </section>
+  </main>
+</div>

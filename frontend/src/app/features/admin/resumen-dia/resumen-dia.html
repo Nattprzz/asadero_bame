@@ -1,0 +1,127 @@
+<div class="manager-shell responsible-shell">
+  @if (sidebarOpen()) { <button class="sidebar-backdrop" type="button" aria-label="Cerrar menú" (click)="closeSidebar()"></button> }
+
+  <aside class="manager-sidebar" [class.open]="sidebarOpen()" aria-label="Navegación del panel responsable">
+    <a class="manager-brand" [href]="'/admin/local/' + localId + '/resumen-dia'" aria-label="BAME, panel responsable">
+      <span class="brand-mark">B</span>
+      <span><strong>BAME</strong><small>PANEL · RESPONSABLE</small></span>
+    </a>
+    <nav class="manager-nav" aria-label="Secciones del panel">
+      <button type="button" [class.active]="activeTab() === 'reservas'" (click)="setTab('reservas')">
+        <span class="nav-icon" aria-hidden="true">▣</span><span>Reservas</span>
+        @if (pendientesBadge() > 0) { <span class="nav-badge">{{ pendientesBadge() }}</span> }
+      </button>
+      <button type="button" [class.active]="activeTab() === 'productos'" (click)="setTab('productos')">
+        <span class="nav-icon" aria-hidden="true">◇</span><span>Productos y stock</span>
+      </button>
+    </nav>
+    <div class="sidebar-spacer"></div>
+    <div class="sidebar-footer">
+      <div class="readonly-card"><strong><span aria-hidden="true"></span> Solo lectura</strong><p>Como responsable puedes consultar reservas y stock, pero no editarlos.</p></div>
+      <div class="manager-user">
+        <span class="user-avatar">{{ userInitials() }}</span>
+        <span class="user-copy"><strong>{{ user()?.name ?? 'Responsable' }}</strong><small>{{ localNombre() ?? 'Local BAME' }}</small></span>
+        <button type="button" title="Cerrar sesión" aria-label="Cerrar sesión" (click)="logout()">⏻</button>
+      </div>
+    </div>
+  </aside>
+
+  <main class="manager-main">
+    <header class="manager-topbar">
+      <button class="menu-button" type="button" (click)="toggleSidebar()" [attr.aria-expanded]="sidebarOpen()" aria-label="Abrir menú">☰</button>
+      <div class="page-heading"><h1>{{ pageTitle() }}</h1><p>{{ pageSubtitle() }}</p></div>
+      <div class="panel-a11y" aria-label="Opciones de accesibilidad"><app-accessibility-menu /></div>
+      <time [attr.datetime]="fechaHoy">{{ hoy | date: 'EEEE, d MMM' : undefined : 'es' }}</time>
+    </header>
+
+    <div class="manager-content">
+      @if (localId == null) {
+        <section class="empty-state"><h2>Sin local asignado</h2><p>Tu cuenta no está asociada a ningún local.</p></section>
+      } @else if (activeTab() === 'reservas') {
+        <section class="tab-panel">
+          @if (pedidosLoading()) {
+            <div class="stats-grid">@for (_ of [1, 2, 3, 4]; track $index) { <div class="skeleton stat-skeleton"></div> }</div>
+          } @else {
+            <div class="stats-grid">
+              <article class="stat-card"><span>Pedidos hoy</span><strong>{{ totalPedidos() }}</strong></article>
+              <article class="stat-card"><span>Pendientes</span><strong class="text-amber-500">{{ countPendientes() }}</strong></article>
+              <article class="stat-card"><span>Preparando</span><strong class="text-orange">{{ countPreparando() }}</strong></article>
+              <article class="stat-card"><span>Facturación hoy</span><strong class="text-success">{{ totalRecaudado() | currency: 'EUR' }}</strong></article>
+            </div>
+          }
+
+          <div class="filter-row" aria-label="Filtrar reservas">
+            @for (filter of [{ key: 'all', label: 'Todas' }, { key: 'pendiente', label: 'Pendientes' }, { key: 'preparando', label: 'Preparando' }, { key: 'listo', label: 'Listos' }]; track filter.key) {
+              <button type="button" [class.active]="resFilter() === filter.key" (click)="setResFilter(filter.key)">{{ filter.label }} <span>{{ resFilterCount(filter.key) }}</span></button>
+            }
+          </div>
+
+          @if (pedidosError()) { <div class="error-banner" role="alert">{{ pedidosError() }}</div> }
+          @else if (!pedidosLoading()) {
+            <div class="data-card reservations-table">
+              <div class="table-head reservation-grid"><span>Pedido</span><span>Cliente</span><span class="optional-column">Artículos</span><span>Recogida</span><span class="align-right">Total</span><span class="align-right">Estado</span></div>
+              @if (filteredReservas().length === 0) { <div class="empty-row">No hay pedidos para este filtro.</div> }
+              @else {
+                @for (pedido of filteredReservas(); track pedido.id) {
+                  <div class="table-row reservation-grid">
+                    <strong>#{{ pedido.reserva }}</strong>
+                    <span class="truncate"><strong>{{ pedido.cliente }}</strong><small>Pedido {{ pedido.id }}</small></span>
+                    <span class="optional-column truncate muted">{{ pedidoItems(pedido) }}</span>
+                    <span><strong>{{ pedido.hora }}</strong><small>Hoy</small></span>
+                    <strong class="align-right">{{ pedido.total | currency: 'EUR' }}</strong>
+                    <span class="align-right"><span class="status-badge" [class]="estadoBadgeClasses(pedido.estado)">{{ estadoLabel(pedido.estado) }}</span></span>
+                  </div>
+                }
+              }
+            </div>
+          }
+        </section>
+      } @else {
+        <section class="tab-panel">
+          @if (productosLoading()) {
+            <div class="stats-grid">@for (_ of [1, 2, 3]; track $index) { <div class="skeleton stat-skeleton"></div> }</div>
+          } @else {
+            <div class="stats-grid stock-stats">
+              <article class="stat-card"><span>Productos activos</span><strong>{{ countActivos() }} <small>/ {{ productos().length }}</small></strong></article>
+              <article class="stat-card"><span>Stock bajo</span><strong class="text-amber-500">{{ countBajoStock() }} <small>≤ 5 ud</small></strong></article>
+              <article class="stat-card"><span>Agotados</span><strong class="text-brand">{{ countAgotados() }}</strong></article>
+            </div>
+          }
+
+          <div class="products-toolbar">
+            <label class="search-field"><span aria-hidden="true">⌕</span><input type="search" [value]="query()" (input)="setQuery($any($event.target).value)" placeholder="Buscar producto…" /></label>
+            <div class="filter-row">
+              @for (filter of [{ key: 'all', label: 'Todos' }, { key: 'low', label: 'Stock bajo' }, { key: 'out', label: 'Agotados' }]; track filter.key) {
+                <button type="button" [class.active]="stockFilter() === filter.key" (click)="setStockFilter(filter.key)">{{ filter.label }} <span>{{ stockFilterCount(filter.key) }}</span></button>
+              }
+            </div>
+          </div>
+
+          @if (productosError()) { <div class="error-banner" role="alert">{{ productosError() }}</div> }
+          @else if (!productosLoading()) {
+            <div class="data-card products-table readonly-products">
+              <div class="table-head product-grid"><span>Producto</span><span class="optional-column">Categoría</span><span class="align-right">Precio</span><span class="align-center">Stock</span><span class="align-right">Disponible</span></div>
+              @if (filteredProductos().length === 0) { <div class="empty-row">No hay productos para “{{ query() }}”.</div> }
+              @else {
+                @for (product of filteredProductos(); track product.id) {
+                  <div class="table-row product-grid" [class.disabled-row]="!product.disponible">
+                    <span class="product-name">
+                      @if (product.foto) { <img [src]="product.foto" [alt]="product.nombre" /> }
+                      @else { <span class="product-initials">{{ product.nombre.slice(0, 2).toUpperCase() }}</span> }
+                      <strong class="truncate">{{ product.nombre }}</strong>
+                    </span>
+                    <span class="optional-column muted">{{ product.categoria ?? 'General' }}</span>
+                    <strong class="align-right">{{ product.precio != null ? (product.precio | currency: 'EUR') : '—' }}</strong>
+                    <span class="stock-readout"><progress max="30" [value]="product.stock ?? 0"></progress><strong [class]="stockTextColorClass(product)">{{ stockLabel(product) }}</strong></span>
+                    <span class="align-right"><span class="availability-badge" [class.available]="product.disponible && (product.stock ?? 0) > 0">{{ product.disponible && (product.stock ?? 0) > 0 ? 'Sí' : 'No' }}</span></span>
+                  </div>
+                }
+              }
+            </div>
+            <p class="stock-legend"><span class="low-dot">●</span> Stock bajo (≤ 5) <span class="medium-dot">●</span> Medio <span class="good-dot">●</span> Suficiente</p>
+          }
+        </section>
+      }
+    </div>
+  </main>
+</div>

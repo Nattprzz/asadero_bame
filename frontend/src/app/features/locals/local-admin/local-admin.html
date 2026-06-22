@@ -1,0 +1,76 @@
+﻿<div class="mx-auto w-full max-w-7xl px-4 md:px-6 py-8">
+  <h1
+    class="font-display text-h1 uppercase tracking-wide leading-none text-text-primary underline underline-offset-6 decoration-[3px] decoration-accent w-fit mt-4 mb-8"
+  >
+    Administración - {{ localName }}
+  </h1>
+
+  <!-- Bloque Principal: Operaciones Diarias -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+    <!-- Tarjeta: Gestión de Reservas / Cocina -->
+    <a
+      [routerLink]="['/admin/local', id, 'reservas']"
+      class="rounded-xl border border-border-default bg-surface-card p-5 flex items-center gap-4 hover:shadow-md transition-all cursor-pointer"
+    >
+      <div class="w-14 h-14 rounded-xl bg-accent/15 flex items-center justify-center shrink-0">
+        <tabler-icon icon="file-description" [size]="28" class="text-accent" />
+      </div>
+      <div class="flex-1 min-w-0">
+        <span class="text-lg font-bold text-text-primary block">Gestión de Reservas</span>
+        <span class="text-sm text-text-secondary">
+          {{ getContadorPendientes() }} pedidos pendientes
+        </span>
+      </div>
+    </a>
+
+    <!-- Tarjeta: Disponibilidad de Carta -->
+    <a
+      [routerLink]="['/admin/local', id, 'disponibilidad']"
+      class="rounded-xl border border-border-default bg-surface-card p-5 flex items-center gap-4 hover:shadow-md transition-all cursor-pointer"
+    >
+      <div class="w-14 h-14 rounded-xl bg-accent/15 flex items-center justify-center shrink-0">
+        <tabler-icon icon="meat" [size]="28" class="text-accent" />
+      </div>
+      <div class="flex-1 min-w-0">
+        <span class="text-lg font-bold text-text-primary block">Disponibilidad de Carta</span>
+        @let agotados = getContadorAgotados();
+        @if (agotados > 0) {
+          <span class="text-sm font-semibold text-brand">{{ agotados }} productos agotados</span>
+        } @else {
+          <span class="text-sm text-success">Todos los productos disponibles</span>
+        }
+      </div>
+    </a>
+  </div>
+
+  <!-- Bloque Secundario: Administración Avanzada -->
+  @if (auth.canAccessAdvanced()) {
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
+      <!-- Tarjeta: Configuración Avanzada -->
+      <a
+        [routerLink]="['/admin/local', id, 'avanzado']"
+        class="rounded-xl border border-border-default bg-surface-card p-4 flex items-center gap-3 hover:shadow-sm transition-all cursor-pointer"
+      >
+        <div
+          class="w-10 h-10 rounded-lg bg-surface-muted flex items-center justify-center shrink-0"
+        >
+          <tabler-icon icon="settings" [size]="20" class="text-text-secondary" />
+        </div>
+        <span class="text-base font-semibold text-text-primary">Configuración avanzada</span>
+      </a>
+
+      <!-- Tarjeta: Historial de Reservas -->
+      <a
+        [routerLink]="['/admin/local', id, 'historial']"
+        class="rounded-xl border border-border-default bg-surface-card p-4 flex items-center gap-3 hover:shadow-sm transition-all cursor-pointer"
+      >
+        <div
+          class="w-10 h-10 rounded-lg bg-surface-muted flex items-center justify-center shrink-0"
+        >
+          <tabler-icon icon="clock" [size]="20" class="text-text-secondary" />
+        </div>
+        <span class="text-base font-semibold text-text-primary">Historial de Reservas</span>
+      </a>
+    </div>
+  }
+</div>

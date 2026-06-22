@@ -1,0 +1,76 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# doctrine.yaml — configuración de Doctrine (DBAL y ORM).
+#
+# Este archivo define la conexión con la base de datos y cómo las entidades
+# de la aplicación se relacionan con las tablas mediante Doctrine ORM.
+# ─────────────────────────────────────────────────────────────────────────────
+
+doctrine:
+    # ─── Configuración de conexión a base de datos ────────────────────────────
+    dbal:
+        # Cadena de conexión obtenida desde las variables de entorno.
+        # El usuario de runtime debe ser de privilegios minimos; usa otro usuario
+        # separado para ejecutar migraciones o tareas de mantenimiento.
+        url: '%env(resolve:DATABASE_URL)%'
+
+        # Muestra el origen de las consultas SQL en modo debug.
+        profiling_collect_backtrace: '%kernel.debug%'
+
+        # Permite utilizar puntos de restauración dentro de transacciones.
+        use_savepoints: true
+
+        mapping_types:
+            _text: string
+            _user_defined_filter: string
+            aal_level: string
+            buckettype: string
+            code_challenge_method: string
+            factor_status: string
+            factor_type: string
+            inet: string
+            oauth_authorization_status: string
+            oauth_client_type: string
+            oauth_registration_type: string
+            oauth_response_type: string
+            oid: integer
+            one_time_token_type: string
+            regclass: string
+            regrole: string
+
+    # ─── Configuración del ORM ────────────────────────────────────────────────
+    orm:
+        # Genera automáticamente las clases proxy necesarias para lazy loading.
+        auto_generate_proxy_classes: true
+
+        # Activa una carga diferida más eficiente para las relaciones.
+        enable_lazy_ghost_objects: true
+
+        # Mejora la información mostrada en errores de mapeo.
+        report_fields_where_declared: true
+
+        # Valida la configuración de los archivos de mapeo.
+        validate_xml_mapping: true
+
+        # Convierte nombres camelCase a snake_case automáticamente.
+        naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
+
+        # Detecta automáticamente las entidades configuradas en el proyecto.
+        auto_mapping: true
+
+        # ─── Registro de entidades ────────────────────────────────────────────
+        mappings:
+            App:
+                # Las entidades utilizan atributos de PHP 8 para el mapeo.
+                type: attribute
+
+                # Indica que pertenece a la aplicación principal.
+                is_bundle: false
+
+                # Directorio donde se encuentran las entidades.
+                dir: '%kernel.project_dir%/src/Entity'
+
+                # Namespace asociado a las entidades.
+                prefix: 'App\Entity'
+
+                # Alias utilizado en consultas DQL.
+                alias: App

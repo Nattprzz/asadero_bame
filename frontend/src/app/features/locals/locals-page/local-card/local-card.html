@@ -1,0 +1,102 @@
+﻿<ul
+  class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 list-none m-0 p-0"
+  aria-label="Listado de asaderos disponibles"
+>
+  @for (local of locals; track local.id) {
+    <li class="flex" [attr.aria-disabled]="isDisabled(local.estado) || null">
+      <article
+        class="group flex flex-col w-full bg-surface-card rounded-2xl border border-border-default
+               shadow-sm hover:shadow-lg hover:border-brand/30 hover:-translate-y-1
+               transition-[transform,box-shadow,border-color] duration-300"
+        [class.opacity-60]="isDisabled(local.estado)"
+      >
+        <!-- Imagen -->
+        <div class="relative overflow-hidden rounded-t-2xl shrink-0">
+          <img
+            [src]="local.foto"
+            [alt]="'Foto de ' + local.nombre"
+            class="group-hover:scale-105 transition-transform duration-500 object-cover w-full h-[196px]"
+          />
+
+          <span
+            [class]="getStatusBadgeClass(local.estado)"
+            class="absolute top-0 left-0 font-display text-sm tracking-wider uppercase px-4 py-2 rounded-br-xl shadow-md z-10"
+          >
+            {{ getStatusText(local.estado) }}
+          </span>
+        </div>
+
+        <!-- Contenido -->
+        <div class="p-5 flex flex-col gap-3 grow">
+          <h2 class="font-display text-h3 uppercase tracking-wide leading-tight text-text-primary">
+            {{ local.nombre }}
+          </h2>
+
+          <!-- Ubicación -->
+          <div class="flex items-start gap-2 text-text-secondary">
+            <tabler-icon icon="map-pin" [size]="16" class="text-brand shrink-0 mt-0.5" aria-hidden="true" />
+            <span class="sr-only">Ubicación:</span>
+            <span class="text-body-sm leading-snug">{{ local.ubicacion }}</span>
+          </div>
+
+          <!-- Horario -->
+          <div class="flex items-start gap-2 text-text-secondary">
+            <tabler-icon icon="clock" [size]="16" class="text-accent shrink-0 mt-0.5" aria-hidden="true" />
+            <span class="sr-only">Horario:</span>
+            @if (horarioText(local)) {
+              <span class="text-body-sm leading-snug">{{ horarioText(local) }}</span>
+            } @else {
+              <span class="text-body-sm text-text-muted italic leading-snug">Horario no disponible</span>
+            }
+          </div>
+
+          <!-- Botones -->
+          <div class="flex gap-2 mt-auto pt-3">
+            <!-- Teléfono -->
+            <a
+              [attr.href]="phoneHref(local.telefono, local.estado)"
+              class="flex items-center justify-center shrink-0 rounded-lg font-bold text-btn text-text-inverse bg-success hover:bg-success-hover transition-colors py-2.5 px-4 max-sm:min-w-[44px] max-sm:min-h-[44px]"
+              [class.pointer-events-none]="isDisabled(local.estado)"
+              [class.opacity-60]="isDisabled(local.estado)"
+              [attr.aria-disabled]="isDisabled(local.estado) || null"
+              [attr.aria-label]="'Llamar a ' + local.nombre"
+            >
+              <tabler-icon icon="phone" [size]="16" class="shrink-0" aria-hidden="true" />
+              <span class="font-display text-btn tracking-wider uppercase ml-2">
+                {{ local.telefono }}
+              </span>
+            </a>
+
+            <!-- Acción principal -->
+            @if (local.estado === '2') {
+              <a
+                [routerLink]="['/home/locales', local.nombre]"
+                class="grow rounded-lg font-bold text-btn text-text-inverse py-2.5 px-4 bg-surface-dark hover:opacity-80 transition-colors flex items-center justify-center min-h-[44px]"
+                [attr.aria-label]="'Ver horarios de ' + local.nombre"
+              >
+                <tabler-icon icon="clock" [size]="16" class="shrink-0" aria-hidden="true" />
+                <span class="font-display text-btn tracking-wider uppercase ml-2">
+                  VER HORARIOS
+                </span>
+              </a>
+            } @else {
+              <a
+                [routerLink]="isDisabled(local.estado) ? null : ['/home/locales', local.nombre, 'reserva']"
+                class="grow rounded-lg font-bold text-btn text-text-inverse py-2.5 px-4 bg-brand hover:bg-brand-hover transition-colors flex items-center justify-center min-h-[44px]"
+                [class.pointer-events-none]="isDisabled(local.estado)"
+                [class.opacity-60]="isDisabled(local.estado)"
+                [attr.aria-disabled]="isDisabled(local.estado) || null"
+                [attr.aria-label]="'Reservar cita en ' + local.nombre"
+              >
+                <tabler-icon icon="bookmark" [size]="16" class="shrink-0" aria-hidden="true" />
+                <span class="font-display text-btn tracking-wider uppercase ml-2">
+                  RESERVAR
+                </span>
+              </a>
+            }
+          </div>
+        </div>
+      </article>
+    </li>
+  }
+</ul>

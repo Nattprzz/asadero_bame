@@ -1,0 +1,55 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# compose.yaml — configuración de contenedores Docker.
+#
+# Este archivo define los servicios necesarios para ejecutar la aplicación en
+# un entorno local. En este caso se configura una instancia de PostgreSQL
+# utilizada por Doctrine como base de datos principal.
+# ─────────────────────────────────────────────────────────────────────────────
+
+services:
+
+###> doctrine/doctrine-bundle ###
+
+  # Base de datos PostgreSQL utilizada por la aplicación.
+  database:
+
+    # Imagen oficial de PostgreSQL basada en Alpine Linux.
+    image: postgres:${POSTGRES_VERSION:-16}-alpine
+
+    environment:
+
+      # Nombre de la base de datos.
+      POSTGRES_DB: ${POSTGRES_DB:-app}
+
+      # Usuario administrador de PostgreSQL.
+      POSTGRES_USER: ${POSTGRES_USER:-app}
+
+      # Contraseña del usuario de PostgreSQL.
+      # Debe modificarse en entornos de producción.
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-!ChangeMe!}
+
+    # Comprueba periódicamente que la base de datos está disponible.
+    healthcheck:
+      test: ["CMD", "pg_isready", "-d", "${POSTGRES_DB:-app}", "-U", "${POSTGRES_USER:-app}"]
+      timeout: 5s
+      retries: 5
+      start_period: 60s
+
+    volumes:
+
+      # Volumen persistente para conservar los datos de la base de datos.
+      - database_data:/var/lib/postgresql/data:rw
+
+      # Alternativa para almacenar los datos directamente en una carpeta local.
+      # - ./docker/db/data:/var/lib/postgresql/data:rw
+
+###< doctrine/doctrine-bundle ###
+
+volumes:
+
+###> doctrine/doctrine-bundle ###
+
+  # Volumen utilizado para almacenar los datos de PostgreSQL.
+  database_data:
+
+###< doctrine/doctrine-bundle ###

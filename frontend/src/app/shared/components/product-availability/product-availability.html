@@ -1,0 +1,352 @@
+<div class="mx-auto w-full max-w-7xl px-4 py-8 md:px-6">
+  <!-- Cabecera -->
+  <header class="mb-8">
+    <p class="mb-2 text-body-sm font-bold uppercase tracking-[0.18em] text-accent">
+      Gestión de carta
+    </p>
+
+    <h1
+      class="font-display w-fit text-h1 uppercase tracking-wide leading-none text-text-primary underline decoration-accent decoration-[3px] underline-offset-8"
+    >
+      Disponibilidad de productos
+    </h1>
+
+    <p class="mt-4 max-w-3xl text-body text-text-secondary">
+      Activa o desactiva productos de la carta según disponibilidad real del local.
+    </p>
+  </header>
+
+  <!-- Estado: cargando -->
+  @if (isLoading) {
+    <div class="flex items-center gap-3 py-12 text-text-muted" aria-live="polite">
+      <tabler-icon icon="refresh" [size]="20" class="animate-spin" aria-hidden="true" />
+      <span>Cargando productos…</span>
+    </div>
+  }
+
+  <!-- Estado: error -->
+  @if (loadError) {
+    <div
+      class="mb-6 flex items-start gap-3 rounded-xl border border-red-500/30 bg-red-500/10 p-4"
+      role="alert"
+    >
+      <tabler-icon icon="alert-triangle" [size]="20" class="mt-0.5 shrink-0 text-red-500" aria-hidden="true" />
+      <div>
+        <p class="font-medium text-red-600">{{ loadError }}</p>
+        <button
+          type="button"
+          (click)="retryLoad()"
+          class="mt-2 text-sm font-bold text-red-600 underline hover:no-underline focus-visible:outline-none"
+        >
+          Reintentar
+        </button>
+      </div>
+    </div>
+  }
+
+  @if (!isLoading && !loadError) {
+
+    <!-- Barra de filtros -->
+    <section
+      class="mb-4 rounded-2xl border border-border-default bg-surface-card p-4 shadow-sm"
+      aria-label="Filtros de productos"
+    >
+      <div class="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+        <!-- Búsqueda -->
+        <label class="relative flex-1">
+          <span class="sr-only">Buscar producto</span>
+          <tabler-icon icon="search" [size]="20" class="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-text-muted" aria-hidden="true" />
+          <input
+            type="text"
+            [ngModel]="searchQuery()"
+            (ngModelChange)="searchQuery.set($event)"
+            placeholder="Buscar producto…"
+            class="w-full rounded-xl border border-form-border bg-form-bg py-3 pl-11 pr-4 text-base text-text-primary placeholder:text-form-placeholder transition-colors focus:outline-none focus:ring-2 focus:ring-accent/40"
+          />
+        </label>
+
+        <!-- Filtro disponibilidad -->
+        <div
+          class="grid grid-cols-3 overflow-hidden rounded-xl border border-border-default bg-surface-muted lg:flex lg:shrink-0"
+          role="tablist"
+          aria-label="Filtrar por disponibilidad"
+        >
+          <button
+            type="button"
+            role="tab"
+            (click)="setFilter('todos')"
+            class="cursor-pointer px-4 py-3 text-sm font-bold transition-colors"
+            [class.bg-surface-dark]="activeFilter() === 'todos'"
+            [class.text-white]="activeFilter() === 'todos'"
+            [class.text-text-secondary]="activeFilter() !== 'todos'"
+            [attr.aria-selected]="activeFilter() === 'todos'"
+          >
+            Todos
+          </button>
+
+          <button
+            type="button"
+            role="tab"
+            (click)="setFilter('agotados')"
+            class="cursor-pointer border-x border-border-default px-4 py-3 text-sm font-bold transition-colors"
+            [class.bg-brand]="activeFilter() === 'agotados'"
+            [class.text-text-inverse]="activeFilter() === 'agotados'"
+            [class.text-brand]="activeFilter() !== 'agotados'"
+            [attr.aria-selected]="activeFilter() === 'agotados'"
+          >
+            Agotados
+          </button>
+
+          <button
+            type="button"
+            role="tab"
+            (click)="setFilter('disponibles')"
+            class="cursor-pointer px-4 py-3 text-sm font-bold transition-colors"
+            [class.bg-success]="activeFilter() === 'disponibles'"
+            [class.text-text-inverse]="activeFilter() === 'disponibles'"
+            [class.text-success]="activeFilter() !== 'disponibles'"
+            [attr.aria-selected]="activeFilter() === 'disponibles'"
+          >
+            Disponibles
+          </button>
+        </div>
+      </div>
+
+      <!-- Nav de categorías -->
+      @if (categories().length > 1) {
+        <div
+          class="scrollbar-hide mt-3 flex gap-2 overflow-x-auto pb-1 pt-0.5"
+          role="tablist"
+          aria-label="Filtrar por categoría"
+        >
+          <button
+            type="button"
+            role="tab"
+            (click)="setCategory('todos')"
+            class="bame-chip"
+            [class.is-active]="activeCatId() === 'todos'"
+            [attr.aria-selected]="activeCatId() === 'todos'"
+          >
+            Todas
+          </button>
+
+          @for (cat of categories(); track cat.id) {
+            <button
+              type="button"
+              role="tab"
+              (click)="setCategory(cat.id)"
+              class="bame-chip"
+              [class.is-active]="activeCatId() === cat.id"
+              [attr.aria-selected]="activeCatId() === cat.id"
+            >
+              {{ cat.name }}
+            </button>
+          }
+        </div>
+      }
+    </section>
+
+    <!-- Lista agrupada por categoría -->
+    @if (visibleGroups().length === 0) {
+      <section
+        class="overflow-hidden rounded-2xl border border-border-default bg-surface-card shadow-sm"
+        aria-label="Listado de productos"
+      >
+        <div class="flex flex-col items-center justify-center px-4 py-12 text-center text-text-muted">
+          <div class="mb-4 flex size-14 items-center justify-center rounded-full bg-surface-muted">
+            <tabler-icon icon="package" [size]="28" aria-hidden="true" />
+          </div>
+
+          @if (searchQuery()) {
+            <p class="font-bold text-text-primary">No hay resultados</p>
+            <p class="mt-1 text-body-sm">
+              No hay productos que coincidan con "{{ searchQuery() }}".
+            </p>
+          } @else {
+            <p class="font-bold text-text-primary">No hay productos disponibles</p>
+            <p class="mt-1 text-body-sm">Todavía no hay productos para gestionar.</p>
+          }
+        </div>
+      </section>
+    }
+
+    @for (group of visibleGroups(); track group.id) {
+      <section
+        class="mb-4 overflow-hidden rounded-2xl border border-border-default bg-surface-card shadow-sm"
+        [attr.aria-label]="group.name"
+      >
+        <!-- Cabecera de categoría -->
+        <div class="flex items-center gap-3 border-b border-border-default bg-surface-muted/60 px-5 py-3">
+          <tabler-icon icon="tag" [size]="16" class="shrink-0 text-accent" aria-hidden="true" />
+          <span class="text-sm font-bold uppercase tracking-widest text-text-secondary">
+            {{ group.name }}
+          </span>
+          <span class="ml-auto text-xs font-semibold text-text-muted">
+            {{ group.products.length }} producto{{ group.products.length !== 1 ? 's' : '' }}
+          </span>
+        </div>
+
+        <!-- Productos de la categoría -->
+        @for (product of group.products; track product.id) {
+          <article
+            class="group flex flex-col gap-4 border-b border-border-default px-4 py-4 transition-colors last:border-b-0 hover:bg-surface-muted/60 sm:px-5 lg:flex-row lg:items-center lg:justify-between"
+            [class.ring-2]="pendingChanges().has(product.id)"
+            [class.ring-inset]="pendingChanges().has(product.id)"
+            [class.ring-amber-400]="pendingChanges().has(product.id)"
+          >
+            <!-- Producto -->
+            <div class="flex min-w-0 flex-1 items-center gap-4">
+              <div class="shrink-0 overflow-hidden rounded-xl bg-surface-muted">
+                @if (product.imagen) {
+                  <img
+                    [src]="product.imagen"
+                    [alt]="'Imagen de ' + product.nombre"
+                    class="size-14 rounded-xl object-cover transition-transform duration-300 group-hover:scale-105 sm:size-16"
+                  />
+                } @else {
+                  <div
+                    class="flex size-14 items-center justify-center rounded-xl bg-surface-muted sm:size-16"
+                    aria-hidden="true"
+                  >
+                    <tabler-icon icon="photo" [size]="20" class="text-text-muted" />
+                  </div>
+                }
+              </div>
+
+              <div class="min-w-0">
+                <div class="flex items-center gap-2">
+                  <h2 class="truncate text-body font-bold text-text-primary">
+                    {{ product.nombre }}
+                  </h2>
+
+                  @if (product.isUpdating) {
+                    <tabler-icon icon="rotate-clockwise" [size]="16" class="shrink-0 animate-spin text-alert" aria-hidden="true" />
+                    <span class="sr-only">Guardando producto</span>
+                  }
+
+                  @if (pendingChanges().has(product.id)) {
+                    <span class="rounded-full bg-amber-400/20 px-2 py-0.5 text-xs font-bold text-amber-600">
+                      Sin guardar
+                    </span>
+                  }
+                </div>
+
+                <p class="mt-1 text-body-sm text-text-secondary">
+                  Umbral de auto-desactivación:
+                  <span class="font-bold text-text-primary">
+                    {{ product.autoDisableThreshold ?? 'Sin definir' }}
+                  </span>
+                </p>
+              </div>
+            </div>
+
+            <!-- Acciones -->
+            <div class="flex w-full flex-col gap-3 lg:w-auto lg:flex-row lg:items-center">
+              <!-- Estado -->
+              <div
+                class="grid grid-cols-2 overflow-hidden rounded-xl border border-border-default bg-surface-card shadow-sm lg:w-[220px]"
+                role="group"
+                [attr.aria-label]="'Estado de disponibilidad de ' + product.nombre"
+              >
+                <button
+                  type="button"
+                  (click)="toggleLocalDisponibilidad(product, false)"
+                  [disabled]="product.isUpdating"
+                  class="h-11 cursor-pointer text-xs font-black uppercase transition-all duration-200 disabled:pointer-events-none disabled:opacity-50"
+                  [class.bg-brand]="!product.disponibilidad"
+                  [class.text-text-inverse]="!product.disponibilidad"
+                  [class.text-text-secondary]="product.disponibilidad"
+                  [attr.aria-pressed]="!product.disponibilidad"
+                >
+                  Agotado
+                </button>
+
+                <button
+                  type="button"
+                  (click)="toggleLocalDisponibilidad(product, true)"
+                  [disabled]="product.isUpdating"
+                  class="h-11 cursor-pointer border-l border-border-default text-xs font-black uppercase transition-all duration-200 disabled:pointer-events-none disabled:opacity-50"
+                  [class.bg-success]="product.disponibilidad"
+                  [class.text-text-inverse]="product.disponibilidad"
+                  [class.text-text-secondary]="!product.disponibilidad"
+                  [attr.aria-pressed]="product.disponibilidad"
+                >
+                  Disponible
+                </button>
+              </div>
+
+              <!-- Umbral -->
+              <label
+                class="flex w-full items-center justify-between gap-3 rounded-xl border border-border-default bg-surface-card px-3 py-2 text-xs font-semibold text-text-secondary lg:w-auto"
+              >
+                <span class="whitespace-nowrap">Auto-desactivar a</span>
+
+                <input
+                  type="number"
+                  min="0"
+                  [(ngModel)]="product.autoDisableThreshold"
+                  (blur)="guardarUmbral(product, product.autoDisableThreshold)"
+                  placeholder="--"
+                  class="w-20 rounded-lg border border-form-border bg-form-bg px-2.5 py-2 text-center text-sm text-text-primary transition-colors focus:outline-none focus:ring-2 focus:ring-accent/40"
+                  [attr.aria-label]="'Umbral de auto-desactivación de ' + product.nombre"
+                />
+              </label>
+            </div>
+          </article>
+        }
+      </section>
+    }
+
+    <!-- Spacer para la barra sticky -->
+    @if (hasPendingChanges() || saveNotification()) {
+      <div class="h-20"></div>
+    }
+
+  } <!-- end @if (!isLoading && !loadError) -->
+</div>
+
+<!-- Barra sticky de guardado (aparece cuando hay cambios pendientes o notificación) -->
+@if (!isLoading && !loadError && (hasPendingChanges() || saveNotification())) {
+  <div
+    class="fixed bottom-0 left-0 right-0 z-40 border-t border-border-default bg-surface-card px-4 py-3 shadow-xl lg:left-56"
+  >
+    <div class="mx-auto flex max-w-7xl items-center justify-between gap-4">
+
+      @if (saveNotification()) {
+        <div
+          class="flex items-center gap-2 text-sm font-semibold"
+          [class.text-success]="saveNotification()!.type === 'success'"
+          [class.text-brand]="saveNotification()!.type === 'error'"
+        >
+          @if (saveNotification()!.type === 'success') {
+            <tabler-icon icon="circle-check" [size]="18" aria-hidden="true" />
+          } @else {
+            <tabler-icon icon="alert-triangle" [size]="18" aria-hidden="true" />
+          }
+          {{ saveNotification()!.text }}
+        </div>
+      } @else {
+        <p class="text-sm font-semibold text-text-secondary">
+          <span class="font-black text-amber-600">{{ pendingChanges().size }}</span>
+          cambio{{ pendingChanges().size !== 1 ? 's' : '' }} sin guardar
+        </p>
+      }
+
+      <button
+        type="button"
+        (click)="saveChanges()"
+        [disabled]="isSaving() || !hasPendingChanges()"
+        class="flex shrink-0 items-center gap-2 rounded-xl bg-brand px-6 py-2.5 text-sm font-black uppercase text-text-inverse transition-colors hover:bg-brand-hover disabled:pointer-events-none disabled:opacity-60"
+      >
+        @if (isSaving()) {
+          <tabler-icon icon="refresh" [size]="16" class="animate-spin" aria-hidden="true" />
+          Guardando…
+        } @else {
+          <tabler-icon icon="device-floppy" [size]="16" aria-hidden="true" />
+          Guardar cambios
+        }
+      </button>
+
+    </div>
+  </div>
+}

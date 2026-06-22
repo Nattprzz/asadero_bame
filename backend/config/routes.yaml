@@ -1,0 +1,115 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# routes.yaml — definición de rutas de la API.
+#
+# Registra los endpoints disponibles en la aplicación y los relaciona con
+# los controladores encargados de procesar cada petición.
+# ─────────────────────────────────────────────────────────────────────────────
+
+# ─── Carga automática de controladores con atributos ─────────────────────────
+controllers:
+    resource:
+        path: ../src/Controller/
+        namespace: App\Controller
+    type: attribute
+
+# ─── Productos públicos ──────────────────────────────────────────────────────
+api_v1_productos_index:
+    path: /api/v1/productos
+    controller: App\Controller\Api\V1\ProductController::index
+    methods: [GET]
+
+api_v1_productos_show:
+    path: /api/v1/productos/{id}
+    controller: App\Controller\Api\V1\ProductController::show
+    methods: [GET]
+
+# ─── Categorías públicas ─────────────────────────────────────────────────────
+api_v1_categorias_index:
+    path: /api/v1/categorias
+    controller: App\Controller\Api\V1\CategoryController::index
+    methods: [GET]
+
+api_v1_categorias_show:
+    path: /api/v1/categorias/{id}
+    controller: App\Controller\Api\V1\CategoryController::show
+    methods: [GET]
+
+# ─── Locales públicos ────────────────────────────────────────────────────────
+api_v1_locales_index:
+    path: /api/v1/locales
+    controller: App\Controller\Api\V1\LocalController::index
+    methods: [GET]
+
+api_v1_locales_show:
+    path: /api/v1/locales/{id}
+    controller: App\Controller\Api\V1\LocalController::show
+    methods: [GET]
+
+# ─── Pedidos de usuarios ─────────────────────────────────────────────────────
+api_v1_pedidos_create:
+    path: /api/v1/pedidos
+    controller: App\Controller\Api\V1\OrderController::create
+    methods: [POST]
+
+api_v1_pedidos_mis_pedidos:
+    path: /api/v1/pedidos/mis-pedidos
+    controller: App\Controller\Api\V1\OrderController::index
+    methods: [GET]
+
+api_v1_pedidos_show:
+    path: /api/v1/pedidos/{id}
+    controller: App\Controller\Api\V1\OrderController::show
+    methods: [GET]
+
+# ─── Gestión de pedidos (administración) ────────────────────────────────────
+api_v1_admin_pedidos_index:
+    path: /api/v1/admin/pedidos
+    controller: App\Controller\Api\V1\Admin\OrderAdminController::index
+    methods: [GET]
+
+api_v1_admin_pedidos_show:
+    path: /api/v1/admin/pedidos/{id}
+    controller: App\Controller\Api\V1\Admin\OrderAdminController::show
+    methods: [GET]
+
+api_v1_admin_pedidos_estado:
+    path: /api/v1/admin/pedidos/{id}/estado
+    controller: App\Controller\Api\V1\Admin\OrderAdminController::status
+    methods: [PATCH]
+
+# ─── Gestión de productos (administración) ──────────────────────────────────
+api_v1_admin_productos_index:
+    path: /api/v1/admin/productos
+    controller: App\Controller\Api\V1\Admin\ProductAdminController::index
+    methods: [GET]
+
+api_v1_admin_productos_show:
+    path: /api/v1/admin/productos/{id}
+    controller: App\Controller\Api\V1\Admin\ProductAdminController::show
+    methods: [GET]
+
+api_v1_admin_productos_create:
+    path: /api/v1/admin/productos
+    controller: App\Controller\Api\V1\Admin\ProductAdminController::create
+    methods: [POST]
+
+api_v1_admin_productos_update:
+    path: /api/v1/admin/productos/{id}
+    controller: App\Controller\Api\V1\Admin\ProductAdminController::update
+    methods: [PATCH, PUT]
+
+api_v1_admin_productos_delete:
+    path: /api/v1/admin/productos/{id}
+    controller: App\Controller\Api\V1\Admin\ProductAdminController::delete
+    methods: [DELETE]
+
+# ─── Gestión de locales (administración) ────────────────────────────────────
+api_v1_admin_locales_create:
+    path: /api/v1/admin/locales
+    controller: App\Controller\Api\V1\Admin\LocalAdminController::create
+    methods: [POST]
+
+api_v1_admin_locales_update:
+    path: /api/v1/admin/locales/{id}
+    controller: App\Controller\Api\V1\Admin\LocalAdminController::update
+    methods: [PATCH, PUT]

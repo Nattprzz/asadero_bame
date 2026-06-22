@@ -1,0 +1,19 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# compose.override.yaml — servicios utilizados durante el desarrollo.
+#
+# Este archivo define los contenedores necesarios para ejecutar la aplicación
+# en local. En este caso se configura la base de datos utilizada por Doctrine.
+# ─────────────────────────────────────────────────────────────────────────────
+
+services:
+
+###> doctrine/doctrine-bundle ###
+
+  # Servicio de base de datos utilizado por la aplicación.
+  database:
+
+    # Expone el puerto PostgreSQL para permitir conexiones externas.
+    ports:
+      - "5432"
+
+###< doctrine/doctrine-bundle ###

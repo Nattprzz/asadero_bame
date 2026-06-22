@@ -1,0 +1,11 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# serializer.yaml — configuración de serialización.
+#
+# Define cómo Symfony convierte objetos PHP a JSON y viceversa, facilitando
+# el intercambio de datos entre el backend y el frontend.
+# ─────────────────────────────────────────────────────────────────────────────
+
+framework:
+    serializer:
+        # Convierte automáticamente nombres camelCase a snake_case.
+        name_converter: serializer.name_converter.camel_case_to_snake_case

@@ -1,0 +1,219 @@
+:host {
+  display: block;
+  margin-top: -84px;
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  
+  /* Variables base (las que ya tenías) */
+  --auth-bg: var(--bg);
+  --auth-card: var(--surface);
+  --auth-input: var(--surf2);
+  --auth-input-strong: var(--surf3);
+  --auth-border: var(--line);
+  --auth-border-strong: var(--line2);
+  --auth-text: var(--txt);
+  --auth-muted: var(--mut);
+  --auth-dim: var(--dim);
+  --auth-danger: var(--red); /* El rojo base que viene de tu tema */
+
+  /* NUEVAS: Variables semánticas para soportar los modos daltónicos */
+  --auth-brand: #f6c722;       /* Amarillo marca */
+  --auth-brand-text: #141210;  /* Texto oscuro sobre el amarillo */
+  --auth-accent: #ff6a1f;      /* Naranja para botones y enlaces */
+  --auth-success: #46c172;     /* Verde para éxito/fuerza alta */
+  --auth-success-text: #0f1f14;/* Texto sobre el verde */
+}
+
+/* 
+  AÑADE TUS CLASES DE DALTONISMO AQUÍ 
+  (Reemplaza '.daltonico-rg' con la clase real que uses en tu app)
+*/
+:host(.daltonico-rg) {
+  /* Si no diferencian rojo/verde, cambiamos a azul/naranja por ejemplo */
+  --auth-success: #0052cc; /* Un azul seguro */
+  --auth-danger: #e59866;  /* Un naranja/marrón seguro */
+}
+
+:host(.daltonico-by) {
+  /* Si no diferencian azul/amarillo, cambiamos el amarillo por un rosa/cyan */
+  --auth-brand: #ff99dc; 
+}
+
+
+/* RESTO DEL CSS ACTUALIZADO CON LAS VARIABLES */
+
+.auth-shell {
+  min-height: 100vh;
+  background: var(--auth-bg);
+  color: var(--auth-text);
+}
+
+.auth-navbar {
+  position: sticky;
+  top: 0;
+  z-index: 60;
+  border-bottom: 1px solid var(--auth-border);
+  background: color-mix(in srgb, var(--auth-bg) 88%, transparent);
+  backdrop-filter: blur(14px);
+}
+
+.navbar-inner {
+  display: flex;
+  align-items: center;
+  max-width: 1180px;
+  min-height: 64px;
+  margin: 0 auto;
+  padding: 12px 18px;
+}
+
+.brand { display: flex; align-items: center; gap: 10px; color: inherit; text-decoration: none; }
+.brand-mark {
+  display: grid;
+  width: 36px;
+  height: 36px;
+  place-items: center;
+  border-radius: 11px;
+  background: var(--auth-brand);
+  color: var(--auth-brand-text);
+  font: 800 1.25rem/1 'Bricolage Grotesque', sans-serif;
+  /* Usamos color-mix para mantener la opacidad dinámica basada en el color de la variable */
+  box-shadow: 0 5px 15px -5px color-mix(in srgb, var(--auth-brand) 65%, transparent);
+}
+.brand-copy { display: flex; flex-direction: column; }
+.brand-copy strong { font: 800 1.1875rem/1 'Bricolage Grotesque', sans-serif; }
+.brand-copy small { margin-top: 4px; color: var(--auth-muted); font-size: 0.5625rem; font-weight: 700; letter-spacing: .2em; }
+.navbar-actions { display: flex; align-items: center; gap: 10px; margin-left: auto; }
+
+.a11y-control {
+  position: relative;
+  display: grid;
+  width: 40px;
+  height: 40px;
+  place-items: center;
+  overflow: hidden;
+  border: 1px solid var(--auth-border);
+  border-radius: 999px;
+  background: var(--auth-input);
+}
+.a11y-control app-accessibility-menu { position: absolute; inset: 0; opacity: 0; z-index: 2; }
+.a11y-label { font: 800 0.9375rem/1 'Bricolage Grotesque', sans-serif; pointer-events: none; }
+.a11y-label sup { font-size: 0.5625rem; }
+
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 8px 13px;
+  border: 1px solid var(--auth-border);
+  border-radius: 999px;
+  background: var(--auth-input);
+  color: var(--auth-text);
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+.theme-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--auth-brand); }
+
+.auth-main {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(360px, 26.25rem);
+  align-items: center;
+  gap: clamp(2.5rem, 7vw, 5.625rem);
+  width: min(1080px, calc(100% - 36px));
+  min-height: calc(100vh - 65px);
+  margin: 0 auto;
+  padding: 32px 0;
+}
+
+.eyebrow {
+  display: inline-flex;
+  padding: 7px 13px;
+  border-radius: 999px;
+  background: var(--auth-brand);
+  color: var(--auth-brand-text);
+  font-size: 0.75rem;
+  font-weight: 800;
+}
+.loyalty-panel h1, .card-header h2, .success-state h2 { font-family: 'Bricolage Grotesque', sans-serif; }
+.loyalty-panel h1 { margin: 18px 0 0; font-size: clamp(2.125rem, 4vw, 3rem); font-weight: 800; line-height: 1.02; letter-spacing: -.03em; }
+.loyalty-panel > p { max-width: 410px; margin: 16px 0 0; color: var(--auth-muted); font-size: 1rem; font-weight: 500; line-height: 1.6; }
+.perks { display: grid; gap: 14px; margin: 28px 0 0; padding: 0; list-style: none; }
+.perks li { display: flex; align-items: center; gap: 13px; font-size: 0.875rem; font-weight: 650; }
+.perk-icon { display: grid; flex: 0 0 40px; height: 40px; place-items: center; border: 1px solid var(--auth-border); border-radius: 12px; background: var(--auth-input); color: var(--auth-brand); font: 800 1rem 'Bricolage Grotesque', sans-serif; }
+
+.auth-card { width: 100%; padding: clamp(1.5rem, 4vw, 1.875rem); border: 1px solid var(--auth-border); border-radius: 26px; background: var(--auth-card); box-shadow: 0 30px 70px -42px rgba(0, 0, 0, .8); }
+.tabs { display: flex; gap: 4px; margin-bottom: 25px; padding: 4px; border: 1px solid var(--auth-border); border-radius: 15px; background: var(--auth-input); }
+.tabs button { flex: 1; padding: 11px; border: 0; border-radius: 11px; background: transparent; color: var(--auth-muted); font-size: 0.875rem; font-weight: 700; cursor: pointer; }
+.tabs button.active { background: var(--auth-card); color: var(--auth-text); font-weight: 800; }
+.card-header { margin-bottom: 21px; }
+.card-header h2 { margin: 0; font-size: 1.4375rem; font-weight: 800; letter-spacing: -.01em; }
+.card-header p { margin: 5px 0 0; color: var(--auth-muted); font-size: 0.8438rem; font-weight: 500; }
+
+.field-group { margin-bottom: 15px; }
+.field-group > label, .label-row label { display: block; margin-bottom: 7px; color: var(--auth-dim); font-size: 0.7188rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; }
+.label-row { display: flex; align-items: baseline; justify-content: space-between; }
+.forgot-link { color: var(--auth-accent); font-size: 0.75rem; font-weight: 700; text-decoration: none; }
+input[type='text'], input[type='email'], input[type='tel'], input[type='password'] { width: 100%; min-height: 47px; padding: 12px 14px; border: 1px solid var(--auth-border-strong); border-radius: 12px; outline: none; background: var(--auth-input); color: var(--auth-text); font-size: 0.875rem; font-weight: 600; }
+input::placeholder { color: var(--auth-dim); }
+input:focus { border-color: var(--auth-brand); box-shadow: 0 0 0 3px color-mix(in srgb, var(--auth-brand) 13%, transparent); }
+input.invalid { border-color: var(--auth-danger); }
+.password-wrap { position: relative; }
+.password-wrap input { padding-right: 75px; }
+.password-toggle { position: absolute; top: 50%; right: 8px; transform: translateY(-50%); padding: 6px 10px; border: 0; border-radius: 8px; background: var(--auth-input-strong); color: var(--auth-muted); font-size: 0.6875rem; font-weight: 800; cursor: pointer; }
+.field-error { margin: 6px 0 0; color: var(--auth-danger); font-size: 0.75rem; font-weight: 650; }
+
+.strength-bars { display: flex; gap: 5px; margin-top: 10px; }
+.strength-bars span { flex: 1; height: 4px; border-radius: 99px; background: var(--auth-input-strong); }
+.strength-bars .filled.weak { background: var(--auth-danger); }
+.strength-bars .filled.medium { background: var(--auth-brand); }
+.strength-bars .filled.strong { background: var(--auth-success); }
+.strength-label { margin: 6px 0 0; color: var(--auth-muted); font-size: 0.7188rem; font-weight: 650; }
+.terms-group { display: flex; align-items: flex-start; gap: 9px; }
+.terms-group input { flex: 0 0 19px; width: 19px; height: 19px; margin: 1px 0 0; accent-color: var(--auth-accent); }
+.terms-group label { color: var(--auth-muted); font-size: 0.75rem; line-height: 1.5; }
+.terms-group a { color: var(--auth-accent); font-weight: 700; text-decoration: none; }
+.terms-error { margin-left: 28px; }
+.submit-error { margin-top: 14px; padding: 11px 13px; border: 1px solid color-mix(in srgb, var(--auth-danger) 35%, transparent); border-radius: 11px; background: color-mix(in srgb, var(--auth-danger) 10%, transparent); color: var(--auth-danger); font-size: 0.7813rem; font-weight: 650; }
+
+.primary-button { display: flex; width: 100%; min-height: 49px; align-items: center; justify-content: center; gap: 9px; margin-top: 19px; padding: 13px 16px; border: 0; border-radius: 14px; background: var(--auth-accent); color: #fff; font-size: 0.9375rem; font-weight: 800; cursor: pointer; box-shadow: 0 9px 22px -11px color-mix(in srgb, var(--auth-accent) 55%, transparent); }
+.primary-button:disabled { cursor: wait; opacity: .7; }
+.spinner { width: 17px; height: 17px; border: 2px solid rgba(255,255,255,.4); border-top-color: #fff; border-radius: 50%; animation: auth-spin .7s linear infinite; }
+.divider { display: flex; align-items: center; gap: 12px; margin: 21px 0; }
+.divider span { flex: 1; height: 1px; background: var(--auth-border); }
+.divider small { color: var(--auth-dim); font-size: 0.7188rem; font-weight: 650; }
+.social-buttons { display: flex; gap: 9px; }
+.social-buttons button { display: flex; flex: 1; align-items: center; justify-content: center; gap: 7px; min-width: 0; padding: 11px 8px; border: 1px solid var(--auth-border-strong); border-radius: 12px; background: var(--auth-input); color: var(--auth-text); font: 800 0.8125rem 'Bricolage Grotesque', sans-serif; cursor: pointer; }
+.guest-link { display: block; margin-top: 19px; color: var(--auth-muted); font-size: 0.8125rem; font-weight: 700; text-align: center; text-decoration: none; }
+
+.success-state { padding: 20px 0 10px; text-align: center; }
+.success-icon { display: grid; width: 74px; height: 74px; place-items: center; margin: 0 auto; border-radius: 50%; background: var(--auth-success); color: var(--auth-success-text); font-size: 2.3125rem; font-weight: 800; }
+.success-state h2 { margin: 20px 0 0; font-size: 1.5rem; font-weight: 800; }
+.success-state p { margin: 9px 0 0; color: var(--auth-muted); font-size: 0.875rem; line-height: 1.5; }
+
+@keyframes auth-spin { to { transform: rotate(360deg); } }
+
+@media (max-width: 819px) {
+  .auth-main { grid-template-columns: 1fr; width: min(460px, calc(100% - 28px)); min-height: calc(100vh - 65px); padding: 24px 0 40px; }
+  .loyalty-panel { display: none; }
+  .form-column { width: 100%; }
+}
+
+@media (max-width: 480px) {
+  .navbar-inner { padding-inline: 14px; }
+  .brand-copy small, .theme-label { display: none; }
+  .theme-toggle { width: 40px; justify-content: center; padding: 0; }
+  .auth-card { padding: 21px 18px; border-radius: 21px; }
+  .social-name { display: none; }
+  .social-buttons button { font-size: 1rem; }
+}
+
+.required-legend {
+  margin-bottom: 1rem;
+  color: var(--auth-muted); /* He actualizado esto a var(--auth-muted) para ser consistente */
+  text-align: right; 
+}
+
+.required-mark {
+  color: var(--auth-danger); /* Ahora usa directamente tu variable de peligro/rojo */
+  font-weight: bold;
+}

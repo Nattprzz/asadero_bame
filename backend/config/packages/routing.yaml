@@ -1,0 +1,17 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# routing.yaml — configuración del sistema de rutas.
+#
+# Define el comportamiento de generación de URLs dentro de la aplicación,
+# incluyendo entornos donde no existe una petición HTTP activa.
+# ─────────────────────────────────────────────────────────────────────────────
+
+framework:
+    router:
+        # URL base utilizada para generar enlaces desde comandos o procesos internos.
+        default_uri: '%env(DEFAULT_URI)%'
+
+when@prod:
+    framework:
+        router:
+            # Evita lanzar excepciones por requisitos de ruta no cumplidos en producción.
+            strict_requirements: null

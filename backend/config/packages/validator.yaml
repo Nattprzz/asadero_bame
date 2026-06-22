@@ -1,0 +1,11 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# validator.yaml — configuración del sistema de validación.
+#
+# Define las reglas generales que Symfony utilizará para validar los datos
+# recibidos antes de procesarlos dentro de la aplicación.
+# ─────────────────────────────────────────────────────────────────────────────
+
+framework:
+    validation:
+        # Utiliza la validación de correos basada en el estándar HTML5.
+        email_validation_mode: html5

@@ -1,0 +1,13 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# security.yaml (rutas) — cierre de sesión.
+#
+# Registra la ruta utilizada por Symfony para gestionar el proceso de cierre
+# de sesión de los usuarios autenticados.
+# ─────────────────────────────────────────────────────────────────────────────
+
+_security_logout:
+    # Carga automáticamente la ruta de logout proporcionada por Symfony.
+    resource: security.route_loader.logout
+
+    # Indica que la ruta se obtiene desde un servicio interno.
+    type: service

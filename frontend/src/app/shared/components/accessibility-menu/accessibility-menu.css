@@ -1,0 +1,231 @@
+:host {
+  display: block;
+  height: 100%;
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+}
+
+button {
+  font: inherit;
+}
+
+.a11y-trigger-wrap,
+.a11y-trigger {
+  display: flex;
+  height: 100%;
+  align-items: center;
+}
+
+.a11y-trigger {
+  justify-content: center;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.a11y-trigger:hover,
+.a11y-trigger.active {
+  color: #f6c722;
+}
+
+.a11y-panel {
+  width: 318px;
+  overflow: hidden;
+  border: 1px solid #332e24;
+  border-radius: 22px;
+  background: #1c1915;
+  color: #f7f2e8;
+  box-shadow: 0 26px 60px -18px rgba(0, 0, 0, .72);
+}
+
+.a11y-header {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 18px 20px;
+  border-bottom: 1px solid #332e24;
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: 1.0625rem;
+  font-weight: 800;
+}
+
+.a11y-header-icon {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  flex: 0 0 34px;
+  place-items: center;
+  border-radius: 50%;
+  background: #f6c722;
+  color: #141210;
+  box-shadow: 0 6px 16px -7px #f6c722;
+}
+
+.a11y-content {
+  display: flex;
+  max-height: min(72vh, 37.5rem);
+  flex-direction: column;
+  gap: 23px;
+  overflow-y: auto;
+  padding: 20px;
+  scrollbar-color: #443c2d transparent;
+  scrollbar-width: thin;
+}
+
+.a11y-content::-webkit-scrollbar {
+  width: 7px;
+}
+
+.a11y-content::-webkit-scrollbar-thumb {
+  border-radius: 99px;
+  background: #443c2d;
+}
+
+.a11y-section h3 {
+  margin: 0 0 10px;
+  color: #7a715f;
+  font-size: 0.625rem;
+  font-weight: 800;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.language-list {
+  display: grid;
+  gap: 7px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.language-option,
+.vision-list button {
+  display: flex;
+  width: 100%;
+  min-height: 44px;
+  align-items: center;
+  gap: 11px;
+  padding: 9px 12px;
+  border: 1px solid #332e24;
+  border-radius: 12px;
+  background: #252017;
+  color: #a79d8b;
+  font-size: 0.8125rem;
+  font-weight: 650;
+  text-align: left;
+  cursor: pointer;
+}
+
+.language-option:hover,
+.vision-list button:hover {
+  border-color: #443c2d;
+  color: #f7f2e8;
+}
+
+.language-option.selected,
+.vision-list button.selected {
+  border-color: #ff6a1f;
+  background: color-mix(in srgb, #ff6a1f 12%, transparent);
+  color: #f7f2e8;
+}
+
+.language-option img {
+  width: 22px;
+  height: 22px;
+  flex: 0 0 22px;
+  border: 1px solid rgba(255, 255, 255, .12);
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.language-option > span:nth-child(2),
+.vision-list button > span:first-child {
+  flex: 1;
+}
+
+.option-check {
+  display: grid;
+  width: 23px;
+  height: 23px;
+  flex: 0 0 23px;
+  place-items: center;
+  border-radius: 50%;
+  background: #f6c722;
+  color: #141210;
+}
+
+.segmented-control {
+  display: flex;
+  gap: 5px;
+  padding: 4px;
+  border: 1px solid #332e24;
+  border-radius: 14px;
+  background: #252017;
+}
+
+.segmented-control button {
+  flex: 1;
+  min-height: 40px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  background: transparent;
+  color: #a79d8b;
+  font-size: 0.875rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.segmented-control button.size-small {
+  font-size: 0.75rem;
+}
+
+.segmented-control button.size-large {
+  font-size: 1.0625rem;
+}
+
+.segmented-control button.selected {
+  border-color: #ff6a1f;
+  background: color-mix(in srgb, #ff6a1f 12%, transparent);
+  color: #f7f2e8;
+}
+
+.vision-list {
+  display: grid;
+  gap: 7px;
+}
+
+.accept-button {
+  width: 100%;
+  min-height: 44px;
+  padding: 11px 18px;
+  border: 0;
+  border-radius: 13px;
+  background: #ff6a1f;
+  color: #fff;
+  font-size: 0.8125rem;
+  font-weight: 800;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 8px 18px -10px color-mix(in srgb, #ff6a1f 55%, transparent);
+}
+
+.accept-button:hover {
+  background: #ff8038;
+}
+
+.language-option:focus-visible,
+.vision-list button:focus-visible,
+.segmented-control button:focus-visible,
+.accept-button:focus-visible,
+.a11y-trigger:focus-visible {
+  outline: 2px solid #f6c722;
+  outline-offset: 2px;
+}
+
+@media (max-width: 380px) {
+  .a11y-panel {
+    width: calc(100vw - 24px);
+  }
+}

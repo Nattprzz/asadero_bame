@@ -1,0 +1,169 @@
+<div class="flex items-center">
+
+  <!-- Botón circular usuario -->
+  <button
+    #menuButton
+    (click)="toggleDropdown()"
+    type="button"
+    class="flex h-9 w-9 items-center justify-center rounded-full border-2 border-[#FF6422] bg-[#1A1712] text-white shadow-[0_0_14px_-3px_#FF6422] transition hover:bg-[#FF6422] cursor-pointer"
+    [attr.aria-expanded]="isOpen"
+    [attr.aria-label]="t().userMenu.ariaLabel"
+    cdkOverlayOrigin
+    #trigger="cdkOverlayOrigin"
+  >
+    <tabler-icon icon="user" [size]="18" />
+  </button>
+
+  <!-- Dropdown overlay -->
+  <ng-template
+    cdkConnectedOverlay
+    [cdkConnectedOverlayOrigin]="trigger"
+    [cdkConnectedOverlayOpen]="isOpen"
+    [cdkConnectedOverlayHasBackdrop]="true"
+    [cdkConnectedOverlayBackdropClass]="'cdk-overlay-transparent-backdrop'"
+    (backdropClick)="closeDropdown()"
+    [cdkConnectedOverlayPositions]="dropdownPositions"
+    [cdkConnectedOverlayMinWidth]="220"
+    cdkConnectedOverlayPanelClass="dropdown-panel"
+  >
+    <div
+      cdkTrapFocusAutoCapture
+      cdkTrapFocus
+      style="background:#141210; border:1px solid rgba(255,255,255,.1); border-radius:16px; overflow:hidden; box-shadow:0 20px 48px -12px rgba(0,0,0,.75); min-width:220px; margin-top:10px;"
+    >
+
+      @if (auth.isLoggedIn()) {
+        <!-- Header usuario logueado -->
+        <div style="padding:14px 16px; border-bottom:1px solid rgba(255,255,255,.08);">
+          <div style="font:700 0.875rem 'Plus Jakarta Sans',sans-serif; color:#fff;">{{ auth.user()?.name }}</div>
+          <div style="font:400 0.75rem 'Plus Jakarta Sans',sans-serif; color:rgba(255,255,255,.45); margin-top:2px;">{{ auth.user()?.email }}</div>
+        </div>
+
+        <!-- Ver perfil -->
+        <div style="padding:6px;">
+          <a
+            routerLink="/home/perfil"
+            (click)="closeDropdown()"
+            class="bame-dd-option"
+          >
+            <tabler-icon icon="user-circle" [size]="17" />
+            <span>{{ t().userMenu.profile }}</span>
+          </a>
+        </div>
+
+        <!-- Cerrar sesión -->
+        <div style="padding:6px; border-top:1px solid rgba(255,255,255,.08);">
+          <button
+            type="button"
+            (click)="logout()"
+            class="bame-dd-option bame-dd-option--danger"
+            style="width:100%; border:none; cursor:pointer;"
+          >
+            <tabler-icon icon="logout" [size]="17" />
+            <span>{{ t().userMenu.logout }}</span>
+          </button>
+        </div>
+
+      } @else {
+        <!-- No logueado -->
+        <div style="padding:6px;">
+          <button
+            type="button"
+            (click)="navigateToLogin()"
+            class="bame-dd-option"
+            style="width:100%; border:none; cursor:pointer;"
+          >
+            <tabler-icon icon="login" [size]="17" />
+            <span>{{ t().userMenu.loginLink }}</span>
+          </button>
+
+          <button
+            type="button"
+            (click)="navigateToRegister()"
+            class="bame-dd-option"
+            style="width:100%; border:none; cursor:pointer;"
+          >
+            <tabler-icon icon="user-check" [size]="17" />
+            <span>{{ t().userMenu.registerLink }}</span>
+          </button>
+        </div>
+      }
+
+    </div>
+  </ng-template>
+
+  <!-- ============ MODAL: Login ============ -->
+  @if (isLoginOpen) {
+    <div class="fixed inset-0 z-[60] flex items-center justify-center p-4">
+      <div (click)="closeLogin()" class="absolute inset-0 bg-black/50"></div>
+      <div
+        (click)="$event.stopPropagation()"
+        cdkTrapFocusAutoCapture
+        cdkTrapFocus
+        class="relative max-h-[90vh] overflow-y-auto rounded-2xl"
+      >
+        <button
+          (click)="closeLogin()"
+          class="absolute top-3 right-3 z-10 w-8 h-8 flex items-center justify-center rounded-lg hover:bg-white/10 transition-colors cursor-pointer"
+          aria-label="Cerrar"
+        >
+          <tabler-icon icon="x" [size]="20" class="text-white/60" />
+        </button>
+        <app-login-form (closed)="closeLogin()" (switchToRegister)="switchToRegister()" />
+      </div>
+    </div>
+  }
+
+  <!-- ============ MODAL: Registro ============ -->
+  @if (isRegisterOpen) {
+    <div class="fixed inset-0 z-[60] flex items-center justify-center p-4">
+      <div (click)="closeRegister()" class="absolute inset-0 bg-black/50"></div>
+      <div
+        (click)="$event.stopPropagation()"
+        cdkTrapFocusAutoCapture
+        cdkTrapFocus
+        class="relative max-h-[90vh] overflow-y-auto rounded-2xl"
+      >
+        <button
+          (click)="closeRegister()"
+          class="absolute top-3 right-3 z-10 w-8 h-8 flex items-center justify-center rounded-lg hover:bg-white/10 transition-colors cursor-pointer"
+          aria-label="Cerrar"
+        >
+          <tabler-icon icon="x" [size]="20" class="text-white/60" />
+        </button>
+        <app-register-form
+          (closed)="closeRegister()"
+          (switchToLogin)="switchToLogin()"
+          (registered)="closeRegister()"
+        />
+      </div>
+    </div>
+  }
+
+  <!-- ============ MODAL: Verificación ============ -->
+  @if (isVerifyOpen) {
+    <div class="fixed inset-0 z-[60] flex items-center justify-center p-4">
+      <div (click)="closeVerify()" class="absolute inset-0 bg-black/50"></div>
+      <div
+        (click)="$event.stopPropagation()"
+        cdkTrapFocusAutoCapture
+        cdkTrapFocus
+        class="relative max-h-[90vh] overflow-y-auto rounded-2xl"
+      >
+        <button
+          (click)="closeVerify()"
+          class="absolute top-3 right-3 z-10 w-8 h-8 flex items-center justify-center rounded-lg hover:bg-white/10 transition-colors cursor-pointer"
+          aria-label="Cerrar"
+        >
+          <tabler-icon icon="x" [size]="20" class="text-white/60" />
+        </button>
+        <app-email-verification
+          (closed)="closeVerify()"
+          (verified)="onVerified()"
+          (backToRegister)="backToRegister()"
+        />
+      </div>
+    </div>
+  }
+
+</div>

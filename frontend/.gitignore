@@ -1,0 +1,59 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# .gitignore — archivos excluidos del repositorio.
+#
+# Este archivo indica a Git qué archivos y carpetas no deben incluirse en el
+# control de versiones. Se utiliza para evitar subir dependencias, archivos
+# temporales, configuraciones locales y recursos generados automáticamente.
+# ─────────────────────────────────────────────────────────────────────────────
+
+# ─── Archivos generados durante la compilación ───────────────────────────────
+
+/dist
+/tmp
+/out-tsc
+/bazel-out
+
+# ─── Dependencias de Node.js ─────────────────────────────────────────────────
+
+/node_modules
+npm-debug.log
+yarn-error.log
+
+# ─── Configuración de IDEs y editores ────────────────────────────────────────
+
+.idea/
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# ─── Visual Studio Code ──────────────────────────────────────────────────────
+
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.history/*
+
+# ─── Archivos temporales de Angular y herramientas auxiliares ────────────────
+
+/.angular/cache
+.sass-cache/
+/connect.lock
+/coverage
+/libpeerconnection.log
+testem.log
+/typings
+__screenshots__/
+
+# ─── Angular Testing Library ─────────────────────────────────────────────────
+
+.atl/
+
+# ─── Archivos propios del sistema operativo ──────────────────────────────────
+
+.DS_Store
+Thumbs.db

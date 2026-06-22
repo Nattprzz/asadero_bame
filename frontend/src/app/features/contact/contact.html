@@ -1,0 +1,372 @@
+<div style="background:var(--bg); color:var(--txt); min-height:100%; font-family:'Plus Jakarta Sans',system-ui,sans-serif;">
+  <div style="max-width:1080px; margin:0 auto; padding:0 18px;">
+
+    <!-- HEADER -->
+    <div style="padding:44px 0 30px; max-width:620px;">
+      <h1 style="font:800 clamp(2.125rem,5vw, 3.125rem)/1.0 'Bricolage Grotesque',sans-serif; color:var(--txt); margin:16px 0 0; letter-spacing:-.02em;">{{ t().contact.heroTitle }}</h1>
+      <p style="font:500 1.0625rem/1.55 'Plus Jakarta Sans',sans-serif; color:var(--mut); margin:14px 0 0;">
+        {{ t().contact.heroDesc }}
+      </p>
+    </div>
+
+    <!-- FORM + CHANNELS -->
+    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(min(320px,100%),1fr)); gap:20px; align-items:start; padding-bottom:8px;">
+
+      <!-- FORM CARD -->
+      <div style="background:var(--surface); border:1px solid var(--line); border-radius:22px; padding:26px;">
+        @if (!sent()) {
+          <div>
+            <h2 style="font:800 1.25rem 'Bricolage Grotesque',sans-serif; color:var(--txt); margin:0 0 18px;">{{ t().contact.formTitle }}</h2>
+            <p style="font:500 0.75rem 'Plus Jakarta Sans',sans-serif; color:var(--mut); margin:0 0 18px;">
+              <span style="color:var(--red); font-weight:700;">*</span>
+              {{ t().contact.requiredFields }}
+            </p>
+
+            <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(min(160px,100%),1fr)); gap:12px;">
+              <div>
+                <label style="display:block; font:700 0.75rem 'Plus Jakarta Sans',sans-serif; color:var(--dim); letter-spacing:.04em; margin-bottom:7px; text-transform:uppercase;">{{ t().contact.name }} <span style="color:var(--red);">*</span></label>
+                <input
+                  [value]="name()"
+                  (input)="name.set($any($event.target).value)"
+                  [placeholder]="t().contact.namePlaceholder"
+                  [style.border-color]="errName() ? 'var(--red)' : 'var(--line)'"
+                  style="width:100%; background:var(--surf2); border-width:1px; border-style:solid; border-radius:12px; padding:12px 14px; color:var(--txt); font:500 0.9063rem 'Plus Jakarta Sans',sans-serif; box-sizing:border-box;"
+                />
+                @if (errName()) {
+                  <div style="font:600 0.7188rem 'Plus Jakarta Sans',sans-serif; color:var(--red); margin-top:5px;">{{ errName() }}</div>
+                }
+              </div>
+              <div>
+                <label style="display:block; font:700 0.75rem 'Plus Jakarta Sans',sans-serif; color:var(--dim); letter-spacing:.04em; margin-bottom:7px;">{{ t().contact.phoneLabel }}</label>
+                <input
+                  [value]="phone()"
+                  (input)="phone.set($any($event.target).value)"
+                  inputmode="tel"
+                  placeholder="xxx xx xx xx"
+                  style="width:100%; background:var(--surf2); border:1px solid var(--line); border-radius:12px; padding:12px 14px; color:var(--txt); font:500 0.9063rem 'Plus Jakarta Sans',sans-serif; box-sizing:border-box;"
+                />
+              </div>
+            </div>
+
+            <div style="margin-top:14px;">
+              <label style="display:block; font:700 0.75rem 'Plus Jakarta Sans',sans-serif; color:var(--dim); letter-spacing:.04em; margin-bottom:7px;">{{ t().contact.emailLabel }} <span style="color:var(--red);">*</span></label>
+              <input
+                [value]="email()"
+                (input)="email.set($any($event.target).value)"
+                inputmode="email"
+                placeholder="xxx@gmail.com"
+                [style.border-color]="errEmail() ? 'var(--red)' : 'var(--line)'"
+                style="width:100%; background:var(--surf2); border-width:1px; border-style:solid; border-radius:12px; padding:12px 14px; color:var(--txt); font:500 0.9063rem 'Plus Jakarta Sans',sans-serif; box-sizing:border-box;"
+              />
+              @if (errEmail()) {
+                <div style="font:600 0.7188rem 'Plus Jakarta Sans',sans-serif; color:var(--red); margin-top:5px;">{{ errEmail() }}</div>
+              }
+            </div>
+
+            <div style="margin-top:14px;">
+              <label style="display:block; font:700 0.75rem 'Plus Jakarta Sans',sans-serif; color:var(--dim); letter-spacing:.04em; margin-bottom:9px;">{{ t().contact.subjectLabel }}</label>
+              <div style="display:flex; flex-wrap:wrap; gap:8px;">
+                @for (sj of SUBJECTS(); track sj) {
+                  <button (click)="setSubject(sj)" [class.is-active]="subject() === sj" class="bame-chip">{{ sj }}</button>
+                }
+              </div>
+            </div>
+
+            <div style="margin-top:14px;">
+              <label style="display:block; font:700 0.75rem 'Plus Jakarta Sans',sans-serif; color:var(--dim); letter-spacing:.04em; margin-bottom:7px; text-transform:uppercase;">{{ t().contact.message }} <span style="color:var(--red);">*</span></label>
+              <textarea
+                [value]="message()"
+                (input)="message.set($any($event.target).value)"
+                rows="4"
+                [placeholder]="t().contact.messagePlaceholder"
+                [style.border-color]="errMessage() ? 'var(--red)' : 'var(--line)'"
+                style="width:100%; background:var(--surf2); border-width:1px; border-style:solid; border-radius:12px; padding:12px 14px; color:var(--txt); font:500 0.9063rem 'Plus Jakarta Sans',sans-serif; resize:vertical; min-height:96px; line-height:1.5; box-sizing:border-box;"
+              ></textarea>
+              @if (errMessage()) {
+                <div style="font:600 0.7188rem 'Plus Jakarta Sans',sans-serif; color:var(--red); margin-top:5px;">{{ errMessage() }}</div>
+              }
+            </div>
+
+            <button (click)="toggleAgree()" style="display:flex; align-items:flex-start; gap:10px; margin-top:22px; background:none; border:none; padding:0; cursor:pointer; text-align:left;">
+              <span
+                [style.border-color]="agree() ? 'var(--orange)' : 'var(--line2)'"
+                [style.background]="agree() ? 'var(--orange)' : 'transparent'"
+                style="flex:none; width:20px; height:20px; border-radius:6px; border-width:1.5px; border-style:solid; color:#fff; display:flex; align-items:center; justify-content:center; font-size: 0.8125rem; line-height:0;"
+              >@if (agree()) { <tabler-icon icon="check" [size]="13" /> }</span>
+              <span style="font:500 0.7813rem/1.45 'Plus Jakarta Sans',sans-serif; color:var(--mut);"> <span style="color:var(--red);">*</span> {{ t().contact.privacyCheck }} </span>
+            </button>
+            @if (errAgree()) {
+              <div style="font:600 0.7188rem 'Plus Jakarta Sans',sans-serif; color:var(--red); margin-top:7px;">{{ errAgree() }}</div>
+            }
+
+            <button (click)="submit()" style="width:100%; margin-top:20px; background:var(--orange); color:#fff; border:none; border-radius:14px; padding:15px; font:800 0.9375rem 'Plus Jakarta Sans',sans-serif; cursor:pointer; box-shadow:0 8px 20px -10px color-mix(in srgb,var(--orange) 55%,transparent); transition:background .15s;">
+              {{ t().contact.send }}
+            </button>
+          </div>
+        } @else {
+          <div style="text-align:center; padding:24px 6px; animation:bameFade .35s ease;">
+            <div style="width:74px; height:74px; margin:0 auto; border-radius:50%; background:var(--green); display:flex; align-items:center; justify-content:center; box-shadow:0 14px 36px -12px var(--green); animation:bameCheck .5s cubic-bezier(.22,1.4,.4,1);">
+              <tabler-icon icon="check" [size]="42" style="color:#0f1f14;" />
+            </div>
+            <h2 style="font:800 1.375rem 'Bricolage Grotesque',sans-serif; color:var(--txt); margin:20px 0 0;">{{ t().contact.successTitle }}</h2>
+            <p style="font:500 0.9063rem/1.55 'Plus Jakarta Sans',sans-serif; color:var(--mut); margin:10px 0 0;">
+              {{ t().contact.successPart1 }}{{ sentName() }}{{ t().contact.successPart2 }}<strong style="color:var(--txt);">{{ sentEmail() }}</strong>{{ t().contact.successPart3 }}
+            </p>
+            <button (click)="reset()" style="margin-top:22px; background:var(--surf2); border:1px solid var(--line2); color:var(--txt); border-radius:13px; padding:13px 22px; font:800 0.875rem 'Plus Jakarta Sans',sans-serif; cursor:pointer;">
+              {{ t().contact.anotherMsg }}
+            </button>
+          </div>
+        }
+      </div>
+
+      <!-- CHANNELS COLUMN -->
+      <div style="display:flex; flex-direction:column; gap:12px;">
+        @for (ch of channels(); track ch.type) {
+          <a [href]="ch.href" class="bame-channel-card">
+            <div
+              style="
+                width:46px;
+                height:46px;
+                flex:none;
+                border-radius:13px;
+                background:var(--surf3);
+                border:1px solid var(--line2);
+                display:flex;
+                align-items:center;
+                justify-content:center;
+              "
+            >
+              @switch (ch.type) {
+                @case ('phone') {
+                  <tabler-icon
+                    icon="phone"
+                    [size]="22"
+                    style="color:var(--yellow);"
+                  />
+                }
+
+                @case ('whatsapp') {
+                  <tabler-icon
+                    icon="message-circle"
+                    [size]="22"
+                    style="color:var(--yellow);"
+                  />
+                }
+
+                @case ('email') {
+                  <tabler-icon
+                    icon="mail"
+                    [size]="22"
+                    style="color:var(--yellow);"
+                  />
+                }
+              }
+            </div>
+
+            <div style="flex:1; min-width:0;">
+              <div
+                style="
+                  font:700 0.75rem 'Plus Jakarta Sans',sans-serif;
+                  letter-spacing:.05em;
+                  color:var(--dim);
+                "
+              >
+                {{ ch.label }}
+              </div>
+
+              <div
+                style="
+                  font:700 1rem 'Bricolage Grotesque',sans-serif;
+                  color:var(--txt);
+                  margin-top:3px;
+                  white-space:nowrap;
+                  overflow:hidden;
+                  text-overflow:ellipsis;
+                "
+              >
+                {{ ch.value }}
+              </div>
+            </div>
+
+            <tabler-icon
+              icon="chevron-right"
+              [size]="18"
+              style="flex:none; color:var(--mut);"
+            />
+          </a>
+        }
+
+        <div
+          style="
+            background:var(--surf2);
+            border:1px solid var(--line);
+            border-radius:18px;
+            padding:18px;
+          "
+        >
+          <div
+            style="
+              font:700 0.75rem 'Plus Jakarta Sans',sans-serif;
+              letter-spacing:.06em;
+              color:var(--dim);
+              margin-bottom:6px;
+            "
+          >
+            {{ t().contact.supportLabel }}
+          </div>
+
+          <div
+            style="
+              font:500 0.8438rem/1.55 'Plus Jakarta Sans',sans-serif;
+              color:var(--mut);
+            "
+          >
+            {{ t().contact.supportHours }}
+          </div>
+
+          <div
+            style="
+              font:500 0.8438rem/1.55 'Plus Jakarta Sans',sans-serif;
+              color:var(--mut);
+            "
+          >
+            {{ t().contact.supportNote }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTACTO POR LOCAL -->
+    <div style="padding:44px 0 8px;">
+      <div style="display:flex; flex-wrap:wrap; gap:6px 14px; align-items:baseline; justify-content:space-between; margin-bottom:18px;">
+        <h2 style="font:800 1.625rem 'Bricolage Grotesque',sans-serif; color:var(--txt); margin:0; letter-spacing:-.01em; white-space:nowrap;">{{ t().contact.localContactTitle }}</h2>
+        <span style="font:600 0.8125rem 'Plus Jakarta Sans',sans-serif; color:var(--dim);">{{ locals().length }} {{ t().contact.localsCount }}</span>
+      </div>
+      <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(min(320px,100%),1fr)); gap:14px;">
+        @for (l of locals(); track l.id) {
+          <div style="background:var(--surface); border:1px solid var(--line); border-radius:18px; padding:18px;">
+            <div style="display:flex; align-items:center; gap:11px;">
+              <div
+                style="
+                  width:36px;
+                  height:36px;
+                  flex:none;
+                  border-radius:11px;
+                  background:var(--surf3);
+                  border:1px solid var(--line2);
+                  display:flex;
+                  align-items:center;
+                  justify-content:center;
+                "
+              >
+                <tabler-icon
+                  icon="building-store"
+                  [size]="18"
+                  style="color:var(--yellow);"
+                />
+              </div>
+              <div style="flex:1; min-width:0;">
+                <div style="font:700 0.9375rem 'Bricolage Grotesque',sans-serif; color:var(--txt);">{{ l.name }}</div>
+                <div style="font:500 0.75rem 'Plus Jakarta Sans',sans-serif; color:var(--mut); margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ l.addr }}</div>
+              </div>
+            </div>
+            <div style="display:flex; gap:9px; margin-top:14px;">
+              <a [href]="l.telHref" class="bame-local-btn">
+                <tabler-icon
+                  icon="phone"
+                  [size]="15"
+                  style="color:var(--yellow); margin-right:6px;"
+                />
+                {{ l.phone }}
+              </a>
+
+              @if (l.email) {
+                <a
+                  [href]="l.mailHref"
+                  title="Enviar email"
+                  class="bame-local-btn"
+                  style="flex:none; width:44px; display:flex; align-items:center; justify-content:center;"
+                >
+                  <tabler-icon
+                    icon="mail"
+                    [size]="18"
+                    style="color:var(--yellow);"
+                  />
+                </a>
+              }
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- FAQ -->
+    <div style="padding: 44px 0 8px">
+      <h2
+        style="
+          font:
+            800 1.625rem &quot;Bricolage Grotesque&quot;,
+            sans-serif;
+          color: var(--txt);
+          margin: 0 0 18px;
+          letter-spacing: -0.01em;
+        "
+      >
+        {{ t().contact.faqTitle }}
+      </h2>
+
+      <div
+        style="display: flex; flex-direction: column; gap: 10px; max-width: 760px"
+      >
+        @for (faq of FAQS(); track faq.q; let i = $index) {
+        <div
+          style="
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            overflow: hidden;
+          "
+        >
+          <button (click)="toggleFaq(i)" class="bame-faq-btn">
+            <span
+              style="
+                font:
+                  700 0.9375rem &quot;Bricolage Grotesque&quot;,
+                  sans-serif;
+                color: var(--txt);
+              "
+            >
+              {{ faq.q }}
+            </span>
+
+            <tabler-icon
+              icon="chevron-down"
+              [size]="20"
+              style="flex: none; color: var(--mut); transition: transform 0.2s ease"
+              [style.transform]="faqOpen() === i ? 'rotate(180deg)' : 'rotate(0deg)'"
+            />
+          </button>
+
+          @if (faqOpen() === i) {
+          <div
+            style="
+              padding: 0 18px 18px;
+              font:
+                500 0.875rem/1.6 &quot;Plus Jakarta Sans&quot;,
+                sans-serif;
+              color: var(--mut);
+            "
+          >
+            {{ faq.a }}
+          </div>
+          }
+        </div>
+        }
+      </div>
+    </div>
+  
+  </div>
+
+  <!-- BOTTOM PADDING -->
+  <div style="height:56px;"></div>
+</div>

@@ -1,0 +1,31 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# .gitignore — archivos y directorios excluidos de Git.
+#
+# Este archivo evita que se suban al repositorio dependencias, archivos
+# temporales, configuraciones locales y credenciales sensibles generadas
+# durante el desarrollo o despliegue de la aplicación.
+# ─────────────────────────────────────────────────────────────────────────────
+
+###> symfony/framework-bundle ###
+
+# Variables de entorno locales y credenciales privadas.
+/.env
+/.env.dev
+
+# Claves privadas utilizadas por Symfony Secrets.
+/config/secrets/prod/prod.decrypt.private.php
+
+# Recursos generados automáticamente por Symfony.
+/public/bundles/
+
+# Caché, logs y archivos temporales.
+/var/
+
+# Dependencias instaladas mediante Composer.
+/vendor/
+
+###< symfony/framework-bundle ###
+###> phpunit/phpunit ###
+/phpunit.xml
+/.phpunit.cache/
+###< phpunit/phpunit ###

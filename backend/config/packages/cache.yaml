@@ -1,0 +1,27 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# cache.yaml — Configuración de caché de Symfony.
+#
+# Aquí se define cómo Symfony guarda datos temporales para mejorar el
+# rendimiento de la aplicación. De momento se usa la configuración por defecto,
+# pero se dejan preparadas opciones como Redis o APCu por si el proyecto
+# necesitara escalar más adelante.
+# ─────────────────────────────────────────────────────────────────────────────
+
+framework:
+    cache:
+        # ─── Prefijo para evitar conflictos entre claves ───────────────────────────
+        #prefix_seed: tu_vendor/nombre_app
+
+        # ─── Caché principal de la aplicación ──────────────────────────────────────
+        # Por defecto Symfony usa el sistema de archivos.
+
+        # ─── Redis para entornos distribuidos ──────────────────────────────────────
+        #app: cache.adapter.redis
+        #default_redis_provider: redis://localhost
+
+        # ─── APCu para un único servidor ───────────────────────────────────────────
+        #app: cache.adapter.apcu
+
+        # ─── Pools de caché específicos ────────────────────────────────────────────
+        #pools:
+            #my.dedicated.cache: null

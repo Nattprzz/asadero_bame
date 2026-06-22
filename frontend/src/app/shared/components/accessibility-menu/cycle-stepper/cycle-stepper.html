@@ -1,0 +1,35 @@
+﻿<div class="flex flex-col gap-1.5">
+  <label [id]="category() + '-label'" class="text-body-sm font-medium text-text-muted">
+    {{ category() }}
+  </label>
+
+  <div class="flex items-center gap-2">
+    <!-- Previous button -->
+    <button type="button" (click)="prev()"
+      [attr.aria-label]="'Anterior ' + category()"
+      tabindex="-1"
+      class="shrink-0 w-8 h-8 flex items-center justify-center rounded-md bg-white/10 hover:bg-white/20 text-white transition-colors">
+      <tabler-icon icon="chevron-left" [size]="16" />
+    </button>
+
+    <!-- Spinbutton showing current value -->
+    <div
+      role="spinbutton"
+      tabindex="0"
+      [attr.aria-labelledby]="category() + '-label'"
+      [attr.aria-valuenow]="options().findIndex(o => o.value === selected())"
+      [attr.aria-valuetext]="currentLabel()"
+      (keydown)="onKeydown($event)"
+      class="flex-1 min-w-0 py-2 px-3 rounded-md bg-white/5 text-center text-body-sm font-medium text-white cursor-pointer focus:outline-none focus:ring-2 focus:ring-accent/60 select-none">
+      {{ currentLabel() }}
+    </div>
+
+    <!-- Next button -->
+    <button type="button" (click)="next()"
+      [attr.aria-label]="'Siguiente ' + category()"
+      tabindex="-1"
+      class="shrink-0 w-8 h-8 flex items-center justify-center rounded-md bg-white/10 hover:bg-white/20 text-white transition-colors">
+      <tabler-icon icon="chevron-right" [size]="16" />
+    </button>
+  </div>
+</div>

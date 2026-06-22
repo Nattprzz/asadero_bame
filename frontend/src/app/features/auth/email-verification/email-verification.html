@@ -1,0 +1,67 @@
+<div class="w-full max-w-md bg-form-bg p-6 md:p-10 rounded-2xl">
+  <div class="text-center mb-6">
+    <h2 class="font-bold text-h2 mb-3 text-text-primary">Verifica tu correo</h2>
+    <p class="text-text-muted text-sm mb-0">Hemos enviado un código de seguridad de 6 dígitos a:</p>
+    <p class="font-bold text-text-primary text-body-sm mt-1">nombre@ejemplo.com</p>
+  </div>
+
+  <form (ngSubmit)="onSubmit()">
+    <div class="mb-6">
+      <label
+        for="codigo"
+        class="block text-center w-full text-body font-medium text-text-muted mb-2"
+        >Introduce el código aquí</label
+      >
+      <input
+        type="text"
+        id="codigo"
+        name="codigo"
+        cdkFocusInitial
+        [(ngModel)]="verificationCode"
+        maxlength="6"
+        class="w-full h-20 text-center text-5xl font-bold tracking-[0.5rem] rounded-lg border border-form-border text-text-primary focus:outline-none focus:ring-4 focus:ring-form-focus-ring/60 focus:border-brand transition-all placeholder:text-form-placeholder"
+        placeholder="000000"
+        required
+        aria-required="true"
+      />
+      <div id="help-code" class="text-center mt-3 text-sm text-text-muted">
+        El código expirará en 10 minutos.
+      </div>
+    </div>
+
+    <div class="mb-5 w-full">
+      <button
+        type="submit"
+        class="w-full bg-brand hover:bg-brand-hover text-text-inverse font-bold py-3 px-4 rounded-lg text-btn transition-colors shadow-sm active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/50"
+      >
+        Confirmar cuenta
+      </button>
+    </div>
+
+    <div class="text-center mt-6">
+      <p class="text-text-muted text-sm mb-2">¿No has recibido el correo?</p>
+      @if (canResend) {
+        <a
+          (click)="resendCode()"
+          href="javascript:void(0)"
+          class="text-text-link font-bold hover:underline text-sm cursor-pointer"
+          >Reenviar código nuevo</a
+        >
+      } @else {
+        <span class="text-text-muted font-medium text-sm select-none">
+          Podrás reenviar en <span class="text-text-secondary font-bold">{{ timeLeft }}s</span>
+        </span>
+      }
+    </div>
+
+    <div class="text-center mt-5">
+      <button
+        type="button"
+        (click)="backToRegister.emit()"
+        class="text-text-muted hover:text-text-primary underline text-sm transition-colors cursor-pointer"
+      >
+        Volver al registro
+      </button>
+    </div>
+  </form>
+</div>

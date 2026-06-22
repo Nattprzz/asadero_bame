@@ -1,0 +1,125 @@
+<div class="a11y-trigger-wrap">
+  <button
+    type="button"
+    cdkOverlayOrigin
+    #trigger="cdkOverlayOrigin"
+    #triggerButton
+    [attr.aria-label]="'Menú de accesibilidad'"
+    [attr.aria-expanded]="isOpen()"
+    (click)="toggle()"
+    (keydown)="onTriggerKeydown($event)"
+    title="Menú de accesibilidad"
+    class="a11y-trigger"
+    [class.active]="isOpen()"
+  >
+    <tabler-icon icon="accessible" [size]="28" />
+  </button>
+
+  <ng-template
+    cdkConnectedOverlay
+    [cdkConnectedOverlayOrigin]="trigger"
+    [cdkConnectedOverlayOpen]="isOpen()"
+    [cdkConnectedOverlayPositions]="positions"
+    (overlayOutsideClick)="close()"
+    (backdropClick)="close()"
+    cdkConnectedOverlayHasBackdrop
+    cdkConnectedOverlayBackdropClass="cdk-overlay-transparent-backdrop"
+    (detach)="close()"
+  >
+    <div
+      class="a11y-panel"
+      cdkTrapFocusAutoCapture
+      cdkTrapFocus
+      (keydown)="onPanelKeydown($event)"
+      role="dialog"
+      aria-label="Menú de accesibilidad"
+    >
+      <header class="a11y-header">
+        <span class="a11y-header-icon" aria-hidden="true">
+          <tabler-icon icon="accessible" [size]="19" />
+        </span>
+        <span>{{ t().title }}</span>
+      </header>
+
+      <div class="a11y-content">
+        <section class="a11y-section" aria-labelledby="a11y-lang-title">
+          <h3 id="a11y-lang-title">{{ t().language }}</h3>
+          <ul class="language-list" role="listbox" aria-labelledby="a11y-lang-title">
+            @for (lang of languages; track lang.code) {
+              <li>
+                <button
+                  type="button"
+                  role="option"
+                  [attr.aria-selected]="pendingLang() === lang.code"
+                  (click)="pendingLang.set(lang.code)"
+                  class="language-option"
+                  [class.selected]="pendingLang() === lang.code"
+                >
+                  <img
+                    [src]="lang.flag"
+                    [alt]="lang.name"
+                    width="22"
+                    height="22"
+                    loading="eager"
+                    (error)="$any($event.target).style.display='none'"
+                  />
+                  <span>{{ lang.name }}</span>
+                  @if (pendingLang() === lang.code) {
+                    <span class="option-check" aria-hidden="true">
+                      <tabler-icon icon="check" [size]="16" />
+                    </span>
+                  }
+                </button>
+              </li>
+            }
+          </ul>
+        </section>
+
+        <section class="a11y-section" aria-labelledby="a11y-fontsize-title">
+          <h3 id="a11y-fontsize-title">{{ t().fontSize }}</h3>
+          <div class="segmented-control" role="group" aria-labelledby="a11y-fontsize-title">
+            @for (fs of fontSizeOptions; track fs.value) {
+              <button
+                type="button"
+                [attr.aria-pressed]="pendingFontSize() === fs.value"
+                [title]="fontSizeTitle(fs.value)"
+                (click)="pendingFontSize.set(fs.value)"
+                [class.selected]="pendingFontSize() === fs.value"
+                [class.size-small]="fs.value === 'sm'"
+                [class.size-large]="fs.value === 'lg'"
+              >
+                {{ fs.label }}
+              </button>
+            }
+          </div>
+        </section>
+
+        <section class="a11y-section" aria-labelledby="a11y-cb-title">
+          <h3 id="a11y-cb-title">{{ t().colorBlind }}</h3>
+          <div class="vision-list" role="group" aria-labelledby="a11y-cb-title">
+            @for (opt of colorBlindOptions; track opt.value) {
+              <button
+                type="button"
+                [attr.aria-pressed]="pendingColorBlind() === opt.value"
+                [title]="t()[opt.labelKey]"
+                (click)="pendingColorBlind.set(opt.value)"
+                [class.selected]="pendingColorBlind() === opt.value"
+              >
+                <span>{{ t()[opt.labelKey] }}</span>
+                @if (pendingColorBlind() === opt.value) {
+                  <span class="option-check" aria-hidden="true">
+                    <tabler-icon icon="check" [size]="16" />
+                  </span>
+                }
+              </button>
+            }
+          </div>
+        </section>
+
+        <button type="button" (click)="onAccept()" class="accept-button">
+          {{ t().accept }}
+        </button>
+      </div>
+    </div>
+  </ng-template>
+</div>

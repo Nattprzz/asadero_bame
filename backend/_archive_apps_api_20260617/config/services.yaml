@@ -1,0 +1,12 @@
+parameters:
+    token_ttl_days: '%env(int:BAME_TOKEN_TTL_DAYS)%'
+
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        bind:
+            int $tokenTtlDays: '%token_ttl_days%'
+
+    App\:
+        resource: '../src/'

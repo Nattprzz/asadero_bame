@@ -1,0 +1,27 @@
+-- =====================================================
+-- 014.12 PRODUCT ALLERGENS SEED DATA
+-- =====================================================
+--
+-- Relación entre productos y alérgenos.
+--
+-- IMPORTANTE:
+-- Revisar las recetas reales antes de insertar datos.
+-- Los alérgenos son información legal alimentaria.
+--
+-- Ejemplo:
+--
+-- insert into product_allergen (
+--     product_id,
+--     allergen_id
+-- )
+-- values (
+--     (select id from products
+--      where slug = 'serrano-ham-croquettes'),
+--
+--     (select id from allergens
+--      where slug = 'gluten')
+-- );
+--
+-- =====================================================
+-- END 014.12
+-- =====================================================

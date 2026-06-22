@@ -1,0 +1,181 @@
+openapi: 3.0.3
+info:
+  title: BAME API
+  version: 1.0.0
+  description: API REST JSON para el backend Symfony de Asadero BAME.
+servers:
+  - url: http://127.0.0.1:8000/api/v1
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: opaque-token
+  schemas:
+    ApiSuccess:
+      type: object
+      properties:
+        success: { type: boolean, example: true }
+        data: {}
+        message: { type: string, nullable: true }
+    ApiError:
+      type: object
+      properties:
+        success: { type: boolean, example: false }
+        error:
+          type: object
+          properties:
+            code: { type: string, example: VALIDATION_ERROR }
+            message: { type: string }
+            details: { type: object, nullable: true }
+security:
+  - bearerAuth: []
+paths:
+  /locales:
+    get:
+      tags: [Publico]
+      security: []
+      responses:
+        '200': { description: Locales activos }
+  /locales/{id}:
+    get:
+      tags: [Publico]
+      security: []
+      parameters: [{ name: id, in: path, required: true, schema: { type: integer } }]
+      responses:
+        '200': { description: Detalle de local }
+  /productos:
+    get:
+      tags: [Publico]
+      security: []
+      parameters:
+        - { name: category, in: query, schema: { type: string } }
+        - { name: search, in: query, schema: { type: string } }
+        - { name: featured, in: query, schema: { type: boolean } }
+      responses:
+        '200': { description: Productos disponibles }
+  /productos/{id}:
+    get:
+      tags: [Publico]
+      security: []
+      parameters: [{ name: id, in: path, required: true, schema: { type: integer } }]
+      responses:
+        '200': { description: Detalle de producto }
+  /categorias:
+    get:
+      tags: [Publico]
+      security: []
+      responses:
+        '200': { description: Categorias activas }
+  /auth/register:
+    post:
+      tags: [Auth]
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            example: { name: Cliente, username: cliente2, email: cliente2@bame.test, password: Cliente1234! }
+      responses:
+        '201': { description: Usuario registrado y token emitido }
+  /auth/login:
+    post:
+      tags: [Auth]
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            examples:
+              email: { value: { email: admin@bame.test, password: Admin1234! } }
+              username: { value: { username: admin, password: Admin1234! } }
+      responses:
+        '200': { description: Token Bearer y usuario }
+  /auth/logout:
+    post:
+      tags: [Auth]
+      responses:
+        '200': { description: Token revocado }
+  /me:
+    get:
+      tags: [Auth]
+      responses:
+        '200': { description: Usuario autenticado sin password }
+  /pedidos:
+    post:
+      tags: [Pedidos]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            example:
+              localId: 1
+              notas: Sin salsa extra
+              items:
+                - productoId: 1
+                  cantidad: 2
+      responses:
+        '201': { description: Pedido creado con total calculado por backend }
+  /pedidos/mis-pedidos:
+    get:
+      tags: [Pedidos]
+      responses:
+        '200': { description: Pedidos del usuario autenticado }
+  /pedidos/{id}:
+    get:
+      tags: [Pedidos]
+      parameters: [{ name: id, in: path, required: true, schema: { type: integer } }]
+      responses:
+        '200': { description: Detalle de pedido propio }
+  /admin/pedidos:
+    get:
+      tags: [Admin]
+      responses:
+        '200': { description: Pedidos de todos los usuarios }
+  /admin/pedidos/{id}:
+    get:
+      tags: [Admin]
+      parameters: [{ name: id, in: path, required: true, schema: { type: integer } }]
+      responses:
+        '200': { description: Detalle de pedido }
+  /admin/pedidos/{id}/estado:
+    patch:
+      tags: [Admin]
+      parameters: [{ name: id, in: path, required: true, schema: { type: integer } }]
+      requestBody:
+        content:
+          application/json:
+            example: { estado: preparando }
+      responses:
+        '200': { description: Estado actualizado }
+  /admin/productos:
+    post:
+      tags: [Admin]
+      requestBody:
+        content:
+          application/json:
+            example: { nombre: Pollo familiar, categoriaId: 1, precio: 18.9, disponible: true }
+      responses:
+        '201': { description: Producto creado }
+  /admin/productos/{id}:
+    patch:
+      tags: [Admin]
+      parameters: [{ name: id, in: path, required: true, schema: { type: integer } }]
+      responses:
+        '200': { description: Producto actualizado }
+    delete:
+      tags: [Admin]
+      parameters: [{ name: id, in: path, required: true, schema: { type: integer } }]
+      responses:
+        '200': { description: Producto eliminado }
+  /admin/locales:
+    post:
+      tags: [Admin]
+      responses:
+        '201': { description: Local creado }
+  /admin/locales/{id}:
+    patch:
+      tags: [Admin]
+      parameters: [{ name: id, in: path, required: true, schema: { type: integer } }]
+      responses:
+        '200': { description: Local actualizado }

@@ -1,0 +1,69 @@
+<div class="mx-auto w-full max-w-7xl px-4 pt-8 md:px-6">
+  <app-breadcrumb-bar
+    [crumbs]="[
+      { label: 'Inicio', route: '/home' },
+      { label: 'Crear cuenta', route: '' },
+    ]"
+  />
+</div>
+
+<div class="mx-auto flex w-full max-w-7xl flex-col items-center px-4 py-10 md:px-6 md:py-16">
+  @if (registered) {
+    <!-- Estado de éxito -->
+    <div
+      class="flex w-full max-w-md flex-col items-center rounded-2xl border border-border-default bg-surface-card p-10 text-center shadow-sm"
+      role="alert"
+      aria-live="polite"
+    >
+      <div class="mb-6 flex size-20 items-center justify-center rounded-full bg-brand/10 ring-1 ring-brand/20">
+        <tabler-icon icon="circle-check" [size]="40" class="text-brand" aria-hidden="true" />
+      </div>
+
+      <h1 class="mb-3 font-display text-h2 uppercase tracking-wide text-text-primary">
+        ¡Cuenta creada!
+      </h1>
+
+      <p class="mb-8 text-body text-text-secondary">
+        Tu cuenta ha sido registrada con éxito. Ya puedes explorar nuestros asaderos y hacer tu
+        primera reserva.
+      </p>
+
+      <a
+        routerLink="/home/locales"
+        class="inline-flex items-center gap-2 rounded-xl bg-brand px-8 py-3 font-bold text-text-inverse transition-colors hover:bg-brand-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/50"
+      >
+        <tabler-icon icon="building-store" [size]="20" aria-hidden="true" />
+        Explorar asaderos
+      </a>
+    </div>
+  } @else {
+    <!-- Encabezado de la página -->
+    <div class="mb-8 w-full max-w-md text-center">
+      <div class="mx-auto mb-4 flex size-14 items-center justify-center rounded-full bg-brand/10 ring-1 ring-brand/20">
+        <tabler-icon icon="user-circle" [size]="28" class="text-brand" aria-hidden="true" />
+      </div>
+      <h1 class="font-display text-h1 uppercase tracking-wide text-text-primary">Crear cuenta</h1>
+      <p class="mt-2 text-body text-text-secondary">
+        Únete a Bame y empieza a reservar en tus asaderos favoritos.
+      </p>
+    </div>
+
+    <!-- Formulario de registro -->
+    <app-register-form
+      (registered)="onRegistered()"
+      (switchToLogin)="onSwitchToLogin()"
+      (closed)="onClosed()"
+    />
+
+    <!-- Nota de inicio de sesión -->
+    <p class="mt-6 text-center text-body-sm text-text-muted">
+      ¿Ya tienes cuenta?
+      <a
+        routerLink="/home/login"
+        class="rounded font-bold text-text-link transition-colors hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/50"
+      >
+        Iniciar sesión
+      </a>
+    </p>
+  }
+</div>

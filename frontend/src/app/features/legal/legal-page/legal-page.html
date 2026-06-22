@@ -1,0 +1,151 @@
+﻿<div class="mx-auto w-full max-w-7xl px-4 py-8 md:px-6">
+  <app-breadcrumb-bar [crumbs]="[{ label: 'Legal', route: '' }]" />
+
+  <!-- Cabecera -->
+  <header class="mb-10">
+    <p class="mb-3 text-body-sm font-bold uppercase tracking-[0.2em] text-accent">
+      Información legal
+    </p>
+
+    <h1
+      class="font-display w-fit text-h1 uppercase leading-none tracking-wide text-text-primary underline decoration-accent decoration-[3px] underline-offset-8"
+    >
+      Legal y privacidad
+    </h1>
+
+    <p class="mt-5 max-w-3xl text-body text-text-secondary">
+      Toda la información relativa al uso de la plataforma Bame, protección de datos,
+      cookies y condiciones del servicio.
+    </p>
+  </header>
+
+  <!-- Navegación legal -->
+  <nav
+    class="mb-8 rounded-2xl border border-border-default bg-surface-card p-3 shadow-sm"
+    aria-label="Secciones legales"
+  >
+    <ul class="m-0 grid list-none grid-cols-1 gap-3 p-0 md:grid-cols-3">
+      @for (section of sections; track section.slug) {
+        <li>
+          <a
+            [routerLink]="['/legal', section.slug]"
+            (click)="activeSlug.set(section.slug)"
+            class="flex h-full items-center gap-3 rounded-xl border border-border-default px-4 py-4 text-body-sm transition-all duration-200"
+            [class.bg-brand]="isActive(section.slug)"
+            [class.border-brand]="isActive(section.slug)"
+            [class.text-text-inverse]="isActive(section.slug)"
+            [class.font-bold]="isActive(section.slug)"
+            [class.bg-surface-muted]="!isActive(section.slug)"
+            [class.text-text-primary]="!isActive(section.slug)"
+            [class.hover:border-accent]="!isActive(section.slug)"
+            [class.hover:text-accent]="!isActive(section.slug)"
+            [attr.aria-current]="isActive(section.slug) ? 'page' : null"
+          >
+            @if (section.slug === 'terminos-y-condiciones') {
+              <tabler-icon icon="file-text" [size]="20" class="shrink-0" aria-hidden="true" />
+            } @else if (section.slug === 'politica-de-privacidad') {
+              <tabler-icon icon="shield-check" [size]="20" class="shrink-0" aria-hidden="true" />
+            } @else if (section.slug === 'politica-de-cookies') {
+              <tabler-icon icon="cookie" [size]="20" class="shrink-0" aria-hidden="true" />
+            }
+
+            <span>{{ section.label }}</span>
+          </a>
+        </li>
+      }
+    </ul>
+  </nav>
+
+  <!-- Metadatos -->
+  <section
+    class="mb-8 grid grid-cols-1 gap-4 md:grid-cols-3"
+    aria-label="Información del documento legal"
+  >
+    <article class="rounded-2xl border border-border-default bg-surface-card p-5 shadow-sm">
+      <div class="mb-3 flex size-10 items-center justify-center rounded-xl bg-surface-muted text-accent">
+        <tabler-icon icon="calendar" [size]="20" aria-hidden="true" />
+      </div>
+
+      <p class="text-body-sm text-text-secondary">Última revisión</p>
+      <p class="font-bold text-text-primary">Junio 2026</p>
+    </article>
+
+    <article class="rounded-2xl border border-border-default bg-surface-card p-5 shadow-sm">
+      <div class="mb-3 flex size-10 items-center justify-center rounded-xl bg-surface-muted text-accent">
+        <tabler-icon icon="building" [size]="20" aria-hidden="true" />
+      </div>
+
+      <p class="text-body-sm text-text-secondary">Responsable</p>
+      <p class="font-bold text-text-primary">Bame</p>
+    </article>
+
+    <article class="rounded-2xl border border-border-default bg-surface-card p-5 shadow-sm">
+      <div class="mb-3 flex size-10 items-center justify-center rounded-xl bg-surface-muted text-accent">
+        <tabler-icon icon="mail" [size]="20" aria-hidden="true" />
+      </div>
+
+      <p class="text-body-sm text-text-secondary">Contacto</p>
+      <p class="font-bold text-text-primary">legal@asaderobame.com</p>
+    </article>
+  </section>
+
+  <!-- Documento -->
+  <main class="mx-auto max-w-5xl">
+    <article class="rounded-2xl border border-border-default bg-surface-card p-6 shadow-sm md:p-10">
+      <header class="mb-8">
+        <p class="mb-3 text-body-sm font-bold uppercase tracking-[0.18em] text-accent">
+          Documento legal
+        </p>
+
+        <h2
+          class="font-display w-fit text-h1 uppercase leading-none tracking-wide text-text-primary underline decoration-accent decoration-[3px] underline-offset-8"
+        >
+          {{ activeLabel() }}
+        </h2>
+      </header>
+
+      <!-- Índice de contenido -->
+      <aside
+        class="mb-10 rounded-2xl border border-border-default bg-surface-muted p-5"
+        aria-label="Índice de contenido"
+      >
+        <h3 class="mb-4 font-display text-h3 uppercase tracking-wide text-text-primary">
+          Índice de contenido
+        </h3>
+
+        <ol class="space-y-3 text-body-sm">
+          @for (block of activeContent(); track block.id) {
+            <li>
+              <a
+                [routerLink]="['/legal', activeSlug()]"
+                [fragment]="block.id"
+                class="flex gap-3 rounded-lg px-2 py-1 text-text-secondary transition-colors hover:text-accent"
+              >
+                <span class="font-bold text-accent">
+                  {{ $index + 1 }}.
+                </span>
+
+                <span>{{ block.title }}</span>
+              </a>
+            </li>
+          }
+        </ol>
+      </aside>
+
+      <!-- Contenido legal -->
+      <div class="max-w-4xl space-y-12">
+        @for (block of activeContent(); track block.id) {
+          <section [id]="block.id">
+            <h3 class="mb-4 font-display text-h3 uppercase tracking-wide text-text-primary">
+              {{ $index + 1 }}. {{ block.title }}
+            </h3>
+
+            <p class="text-body leading-8 text-text-secondary">
+              {{ block.text }}
+            </p>
+          </section>
+        }
+      </div>
+    </article>
+  </main>
+</div>

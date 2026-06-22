@@ -1,0 +1,52 @@
+<div class="mx-auto w-full max-w-7xl px-4 pt-8 md:px-6">
+  <app-breadcrumb-bar
+    [crumbs]="[
+      { label: t().nav.locales, route: '/home/locales' },
+      { label: t().payment.cancelTitle, route: '' },
+    ]"
+  />
+</div>
+
+<div class="mx-auto flex w-full max-w-2xl flex-col items-center px-4 py-16 text-center md:px-6 md:py-24">
+  <div
+    class="mb-8 flex size-24 items-center justify-center rounded-full bg-accent/10 ring-2 ring-accent/20"
+    aria-hidden="true"
+  >
+    <tabler-icon icon="x" [size]="48" class="text-accent" />
+  </div>
+
+  <h1
+    class="mb-4 font-display text-h1 uppercase leading-tight tracking-wide text-text-primary"
+    role="status"
+    aria-live="polite"
+  >
+    {{ t().payment.cancelTitle }}
+  </h1>
+
+  <p class="mb-3 max-w-md text-body text-text-secondary">
+    {{ t().payment.cancelDesc }}
+  </p>
+  <p class="mb-10 max-w-md text-body-sm text-text-muted">
+    {{ t().payment.cancelDesc2 }}
+  </p>
+
+  <div class="flex flex-col gap-3 sm:flex-row sm:justify-center">
+    <a
+      routerLink="/home/locales"
+      class="inline-flex items-center justify-center gap-2 rounded-xl border border-border-default bg-surface-card px-6 py-3 font-bold text-text-primary transition-colors hover:bg-surface-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/50"
+    >
+      <tabler-icon icon="building-store" [size]="20" aria-hidden="true" />
+      {{ t().payment.viewLocals }}
+    </a>
+
+    <button
+      type="button"
+      (click)="retryPayment()"
+      [attr.aria-label]="t().payment.retryBtn"
+      class="inline-flex items-center justify-center gap-2 rounded-xl bg-brand px-6 py-3 font-bold text-text-inverse transition-colors hover:bg-brand-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/50"
+    >
+      <tabler-icon icon="credit-card" [size]="20" aria-hidden="true" />
+      <span class="font-display text-btn uppercase tracking-wider">{{ t().payment.retryBtn }}</span>
+    </button>
+  </div>
+</div>

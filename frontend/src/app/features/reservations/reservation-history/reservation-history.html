@@ -1,0 +1,257 @@
+﻿<div class="mx-auto w-full max-w-7xl px-4 md:px-6 py-8">
+  <h1
+    class="font-display text-h1 uppercase tracking-wide leading-none text-text-primary underline underline-offset-6 decoration-[3px] decoration-accent w-fit mb-4"
+  >
+    Historial de Reservas
+  </h1>
+
+  <!-- Selector de fecha -->
+  <div class="flex flex-col sm:flex-row gap-4 items-stretch sm:items-center mb-8">
+    <label for="date" class="font-medium text-text-secondary shrink-0">Fecha:</label>
+    <input
+      id="date"
+      type="date"
+      [(ngModel)]="selectedDate"
+      class="flex-1 px-4 py-3 rounded-xl border border-form-border bg-form-bg text-text-primary text-base focus:outline-none focus:ring-2 focus:ring-accent/40 transition-colors"
+    />
+    <button
+      (click)="filtrarPorFecha()"
+      aria-label="Buscar"
+      class="bg-brand hover:bg-brand-hover text-text-inverse font-bold py-3 px-8 rounded-xl flex items-center justify-center gap-2 cursor-pointer transition-colors"
+    >
+      Buscar
+      <tabler-icon icon="search" [size]="16" />
+    </button>
+  </div>
+
+  @if (isLoading) {
+    <div class="flex justify-center items-center py-50">
+      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-text-primary"></div>
+      <span class="ml-3 text-body font-medium text-text-secondary">Cargando reservas...</span>
+    </div>
+  } @else {
+    <!-- Panel de resumen: métricas + acumulado -->
+    @let pendientes = countPendiente;
+    @let completadas = countCompletada;
+    @let productosResumen = obtenerResumenProductosDia();
+    <div class="grid grid-cols-5 gap-4 mb-8">
+      <!-- Métricas (col-span-2) -->
+      <div class="col-span-5 md:col-span-2 grid grid-cols-2 gap-4">
+        <div
+          class="rounded-xl border border-border-default bg-surface-card p-4 flex flex-col items-center justify-center"
+        >
+          <span class="text-sm font-medium text-text-secondary mb-1">Pendientes</span>
+          <span class="text-4xl font-black text-text-primary">{{ pendientes }}</span>
+        </div>
+        <div
+          class="rounded-xl border border-border-default bg-surface-card p-4 flex flex-col items-center justify-center"
+        >
+          <span class="text-sm font-medium text-text-secondary mb-1">Completadas</span>
+          <span class="text-4xl font-black text-success">{{ completadas }}</span>
+        </div>
+      </div>
+
+      <!-- Resumen de productos (col-span-3) -->
+      <div
+        class="col-span-5 md:col-span-3 rounded-xl border border-border-default bg-surface-card p-4"
+      >
+        <span class="text-sm font-medium text-text-secondary mb-2 block">Resumen de productos</span>
+        @if (productosResumen.length > 0) {
+          <div class="max-h-[160px] overflow-y-auto space-y-1.5 pr-1">
+            @for (item of productosResumen; track item.nombre) {
+              <div
+                class="flex items-center justify-between px-2 py-1.5 rounded-lg hover:bg-surface-muted transition-colors"
+              >
+                <span class="text-base font-bold text-text-primary">{{ item.nombre }}</span>
+                <span class="text-base font-bold text-text-secondary">
+                  {{ item.pendiente }} pend. · {{ item.completada }} compl.
+                </span>
+              </div>
+            }
+          </div>
+        } @else {
+          <div class="flex items-center justify-center h-[100px] text-sm text-text-muted">
+            Sin datos para esta fecha.
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Tabla de reservas -->
+    <h2
+      class="text-h2 font-semibold mb-6 underline underline-offset-6 decoration-[3px] decoration-accent w-fit"
+    >
+      Reservas del día
+    </h2>
+    <div class="mb-6 rounded-xl border border-border-default overflow-hidden">
+      <cdk-virtual-scroll-viewport
+        [itemSize]="64"
+        [minBufferPx]="400"
+        [maxBufferPx]="800"
+        style="height: 400px; width: 100%; overflow-x: auto"
+        class="bg-surface-card"
+        role="table"
+        aria-label="Historial de reservas"
+      >
+        <!-- Cabecera sticky -->
+        <div class="min-w-[860px]">
+          <div class="bg-surface-muted sticky top-0 z-10 border-b border-border-default">
+            <div class="flex">
+              <!-- # -->
+              <div
+                class="px-4 py-3 text-center font-medium text-text-secondary uppercase tracking-wider w-[70px] shrink-0"
+              >
+                <button
+                  type="button"
+                  (click)="toggleSort('reserva')"
+                  class="flex items-center justify-center cursor-pointer w-full"
+                >
+                  #
+                  <span class="ml-2" [class.hidden]="sortKey !== 'reserva'">
+                    <tabler-icon [icon]="getSortIcon('reserva')" [size]="14" />
+                  </span>
+                </button>
+              </div>
+              <!-- Hora -->
+              <div
+                class="px-4 py-3 text-left font-medium text-text-secondary uppercase tracking-wider w-[90px] shrink-0"
+              >
+                <button
+                  type="button"
+                  (click)="toggleSort('hora')"
+                  class="flex items-center cursor-pointer"
+                >
+                  Hora
+                  <span class="ml-2" [class.opacity-0]="sortKey !== 'hora'">
+                    <tabler-icon [icon]="getSortIcon('hora')" [size]="14" />
+                  </span>
+                </button>
+              </div>
+              <!-- Cliente -->
+              <div
+                class="px-4 py-3 text-left font-medium text-text-secondary uppercase tracking-wider flex-1 min-w-[160px]"
+              >
+                <button
+                  type="button"
+                  (click)="toggleSort('cliente')"
+                  class="flex items-center cursor-pointer w-full"
+                >
+                  Cliente
+                  <span class="ml-2" [class.opacity-0]="sortKey !== 'cliente'">
+                    <tabler-icon [icon]="getSortIcon('cliente')" [size]="14" />
+                  </span>
+                </button>
+              </div>
+              <!-- Productos -->
+              <div
+                class="px-4 py-3 text-left font-medium text-text-secondary uppercase tracking-wider flex-2 min-w-[252px]"
+              >
+                Productos
+              </div>
+              <!-- Estado -->
+              <div
+                class="px-4 py-3 text-left font-medium text-text-secondary uppercase tracking-wider w-[188px] shrink-0"
+              >
+                <button
+                  type="button"
+                  (click)="toggleSort('estado')"
+                  class="flex items-center cursor-pointer"
+                >
+                  Estado
+                  <span class="ml-2" [class.opacity-0]="sortKey !== 'estado'">
+                    <tabler-icon [icon]="getSortIcon('estado')" [size]="14" />
+                  </span>
+                </button>
+              </div>
+              <!-- Total -->
+              <div
+                class="px-4 py-3 text-right font-medium text-text-secondary uppercase tracking-wider w-[100px] shrink-0"
+              >
+                Total
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Cuerpo -->
+        <div class="min-w-[860px]">
+          <div
+            *cdkVirtualFor="let r of sortedReservations(); trackBy: trackReservation"
+            class="flex border-b border-border-default"
+            role="row"
+            style="min-height: 64px"
+          >
+            <div class="px-4 w-[70px] shrink-0 flex items-center justify-center" role="cell">
+              <span class="font-bold text-base">{{ r.reserva }}</span>
+            </div>
+            <div class="px-4 w-[90px] shrink-0 flex items-center" role="cell">
+              <span class="text-lg font-bold">{{ r.hora }}</span>
+            </div>
+            <div class="px-4 flex-1 min-w-[160px] flex items-center" role="cell">
+              <span class="text-base font-semibold truncate" [title]="r.cliente">{{
+                r.cliente
+              }}</span>
+            </div>
+            <div
+              class="px-4 flex-2 min-w-[252px] flex flex-wrap items-center content-center gap-1.5"
+              role="cell"
+            >
+              @for (p of r.productos; track $index) {
+                <span class="inline-block bg-surface-muted rounded-xl px-2 py-1 text-sm font-bold">
+                  {{ p.nombre }} x{{ p.cantidad }}
+                </span>
+              }
+            </div>
+            <div class="px-4 w-[188px] shrink-0 flex items-center" role="cell">
+              <span
+                class="inline-block py-2 px-3 rounded-xl border-2 font-black text-sm"
+                [class.bg-yellow-400]="r.estado === 'Pendiente'"
+                [class.border-yellow-500]="r.estado === 'Pendiente'"
+                [class.text-black]="r.estado === 'Pendiente'"
+                [class.bg-blue-500]="r.estado === 'Confirmado'"
+                [class.border-blue-600]="r.estado === 'Confirmado'"
+                [class.text-white]="r.estado === 'Confirmado'"
+                [class.bg-orange-500]="r.estado === 'En preparación'"
+                [class.border-orange-600]="r.estado === 'En preparación'"
+                [class.text-white]="r.estado === 'En preparación'"
+                [class.bg-green-500]="r.estado === 'Listo'"
+                [class.border-green-600]="r.estado === 'Listo'"
+                [class.text-white]="r.estado === 'Listo'"
+                [class.bg-green-700]="r.estado === 'Entregado'"
+                [class.border-green-800]="r.estado === 'Entregado'"
+                [class.text-white]="r.estado === 'Entregado'"
+                [class.bg-brand]="r.estado === 'Cancelado'"
+                [class.border-brand-hover]="r.estado === 'Cancelado'"
+                [class.text-white]="r.estado === 'Cancelado'"
+              >
+                {{ r.estado }}
+              </span>
+            </div>
+            <div
+              class="px-4 w-[100px] shrink-0 flex items-center justify-end text-right"
+              role="cell"
+            >
+              <span class="text-base font-bold">{{ calcularTotal(r) | currency: 'EUR' }}</span>
+            </div>
+          </div>
+        </div>
+      </cdk-virtual-scroll-viewport>
+
+      @if (sortedReservations().length === 0) {
+        <div class="px-4 py-8 text-center text-text-muted">No hay reservas para esta fecha.</div>
+      }
+    </div>
+
+    <!-- Total completadas abajo a la derecha -->
+    <div class="flex justify-end mt-4">
+      <div
+        class="rounded-xl border border-border-default bg-surface-card px-6 py-4 flex items-center gap-4"
+      >
+        <span class="text-sm font-medium text-text-secondary">Total ingresos (completadas)</span>
+        <span class="text-2xl font-black text-success">{{
+          totalCompletadas | currency: 'EUR'
+        }}</span>
+      </div>
+    </div>
+  }
+</div>

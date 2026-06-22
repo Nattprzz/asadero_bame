@@ -1,0 +1,15 @@
+@import '../../locals/gerente-panel/gerente-panel.css';
+
+.responsible-shell .manager-brand small{color:var(--panel-yellow)}
+.responsible-shell .user-avatar{color:var(--panel-yellow)}
+.readonly-card{padding:13px;border:1px solid var(--panel-line);border-radius:14px;background:var(--panel-soft)}
+.readonly-card strong{display:flex;align-items:center;gap:8px;font-size: 0.75rem}
+.readonly-card strong span{width:8px;height:8px;border-radius:50%;background:var(--panel-green)}
+.readonly-card p{margin:6px 0 0;color:var(--panel-muted);font-size: 0.6875rem;line-height:1.45}
+.text-orange{color:var(--panel-orange)!important}.stock-stats{grid-template-columns:repeat(3,minmax(0,1fr))}.stat-card strong small{color:var(--panel-dim);font:650 0.75rem 'Plus Jakarta Sans',sans-serif}
+.status-badge,.availability-badge{display:inline-block;padding:4px 10px;border:1px solid var(--panel-line2);border-radius:99px;font-size: 0.6875rem;font-weight:700;white-space:nowrap}
+.readonly-products .product-grid{grid-template-columns:minmax(180px,1.7fr) minmax(120px,1fr) minmax(90px,.7fr) minmax(130px,1fr) minmax(80px,.8fr)}
+.stock-readout{display:flex;align-items:center;justify-content:center;gap:9px}.stock-readout progress{width:54px;height:6px;border:0;border-radius:99px;overflow:hidden;background:var(--panel-strong);color:var(--panel-green)}.stock-readout progress::-webkit-progress-bar{background:var(--panel-strong)}.stock-readout progress::-webkit-progress-value{border-radius:99px;background:currentColor}.stock-readout progress::-moz-progress-bar{border-radius:99px;background:currentColor}.stock-readout strong{min-width:26px;text-align:right}.availability-badge{border:0;background:color-mix(in srgb,var(--panel-red) 14%,transparent);color:var(--panel-red)}.availability-badge.available{background:color-mix(in srgb,var(--panel-green) 14%,transparent);color:var(--panel-green)}
+.stock-legend{display:flex;align-items:center;gap:7px;margin:12px 0 0;color:var(--panel-dim);font-size: 0.7188rem}.low-dot{color:var(--panel-red)}.medium-dot{margin-left:8px;color:var(--panel-yellow)}.good-dot{margin-left:8px;color:var(--panel-green)}
+@media(max-width:1050px){.readonly-products .product-grid{grid-template-columns:minmax(180px,1.6fr) minmax(90px,.8fr) minmax(130px,1fr) minmax(80px,.7fr)}}
+@media(max-width:620px){.stock-stats{grid-template-columns:1fr}.stock-legend{flex-wrap:wrap}}

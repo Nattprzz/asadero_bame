@@ -1,0 +1,7 @@
+This directory is a non-active backup of the former backend/apps/api Symfony app.
+
+The real backend root is:
+
+    C:\bame\backend
+
+Do not run Composer, Symfony commands, migrations, fixtures, or Angular API calls from this archived directory.

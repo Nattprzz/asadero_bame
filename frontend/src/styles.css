@@ -1,0 +1,568 @@
+@import 'tailwindcss';
+
+@theme {
+  /* Fonts */
+  --font-sans: 'Poppins', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-display: 'Bebas Neue', sans-serif;
+
+  /* Font Sizes */
+  --text-h1: 3.5rem;
+  --text-h2: 2rem;
+  --text-h3: 1.875rem;
+  --text-body: 1rem;
+  --text-body-sm: 0.9375rem;
+  --text-btn: 1.05rem;
+
+  /* ══════════════════════════════════════════
+     Paleta "Crujiente y Dinámico"
+     Tema claro — limpio y potente, fotos sobre tarjetas blancas.
+     ══════════════════════════════════════════ */
+
+  /* Brand — naranja-rojo intenso CTA */
+  --color-brand: #FF4500;
+  --color-brand-hover: #E63E00;
+
+  /* Accent — dorado/amarillo energético */
+  --color-accent: #FFD700;
+  --color-accent-hover: #E6C200;
+
+  /* Success — verde semántico (disponibilidad, confirmaciones) */
+  --color-success: #16a34a;
+  --color-success-hover: #15803d;
+
+  /* Alert — ámbar/amarillo de aviso (reutiliza acento) */
+  --color-alert: #FFD700;
+
+  /* Surfaces — Light */
+  --color-surface-dark: #18181B;   /* zinc-900 — navbar, footer, paneles oscuros */
+  --color-surface-card: #FFFFFF;   /* blanco puro — tarjetas */
+  --color-surface-muted: #EDEDEF;  /* zinc-100 suave — fondos secundarios */
+  --color-surface-page: #F4F4F5;   /* zinc-100 — fondo de página */
+
+  /* Text — Light */
+  --color-text-primary: #18181B;   /* zinc-900 — texto principal */
+  --color-text-secondary: #52525B; /* zinc-600 */
+  --color-text-muted: #A1A1AA;     /* zinc-400 — placeholders, labels */
+  --color-text-inverse: #FFFFFF;   /* blanco — texto sobre fondos oscuros */
+  --color-text-link: #FF4500;      /* brand — enlaces */
+
+  /* Borders — Light */
+  --color-border-default: #D4D4D8;  /* zinc-300 */
+  --color-border-muted: #EDEDEF;
+
+  /* Form — Light */
+  --color-form-bg: #FFFFFF;
+  --color-form-border: #D4D4D8;
+  --color-form-focus-ring: #FFD700; /* dorado — foco de inputs */
+  --color-form-placeholder: #A1A1AA;
+
+  /* Animations */
+  --animate-wiggle: wiggle 1s infinite;
+  @keyframes wiggle {
+    0%,
+    100% {
+      transform: rotate(-3deg);
+    }
+
+    50% {
+      transform: rotate(3deg);
+    }
+  }
+}
+
+/* ══════════════════════════════════════════
+   BAME Order Page — custom color vars
+   Independiente del sistema Tailwind: vars sin prefijo para
+   la página de carta/pedido (reservation page).
+   ══════════════════════════════════════════ */
+
+:root {
+  /* Factor de escala de texto — sobreescrito por el menú de accesibilidad */
+  --bame-fs: 1rem;
+
+  --bg: #f3efe7;
+  --surface: #ffffff;
+  --surf2: #faf7f0;
+  --surf3: #efe9dd;
+  --line: #e8e0d1;
+  --line2: #dacfbb;
+  --txt: #1d1812;
+  --mut: #6f6557;
+  --dim: #a09784;
+  --thumbA: #ece3d3;
+  --thumbB: #e3d8c5;
+  --cartBg: #ffffff;
+  --yellow: #f6c722;
+  --orange: #ff6a1f;
+  --orangeH: #ff8038;
+  --green: #46c172;
+  --red: #ff6b5e;
+}
+
+/* BAME keyframes */
+@keyframes bameShimmer {
+  0%   { background-position: -380px 0 }
+  100% { background-position:  380px 0 }
+}
+@keyframes bameUp {
+  from { transform: translateY(100%) }
+  to   { transform: translateY(0) }
+}
+@keyframes bameFade {
+  from { opacity: 0 }
+  to   { opacity: 1 }
+}
+@keyframes bamePop {
+  0%   { transform: scale(.6); opacity: 0 }
+  60%  { transform: scale(1.12) }
+  100% { transform: scale(1); opacity: 1 }
+}
+@keyframes bameToast {
+  0%   { transform: translate(-50%, -16px); opacity: 0 }
+  12%  { transform: translate(-50%, 0); opacity: 1 }
+  88%  { transform: translate(-50%, 0); opacity: 1 }
+  100% { transform: translate(-50%, -16px); opacity: 0 }
+}
+@keyframes bameSpin {
+  to { transform: rotate(360deg) }
+}
+@keyframes bameCheck {
+  0%   { transform: scale(0) }
+  60%  { transform: scale(1.15) }
+  100% { transform: scale(1) }
+}
+
+/* Product card hover */
+.bame-card:hover {
+  border-color: var(--line2) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 14px 34px -16px rgba(0,0,0,.35);
+}
+
+/* Category rail buttons (desktop sidebar) */
+.bame-rail-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  text-align: left;
+  padding: 10px 12px;
+  border-radius: 11px;
+  border: none;
+  background: transparent;
+  color: var(--mut);
+  font-size: 0.8438rem;
+  font-weight: 600;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  cursor: pointer;
+  transition: background .14s, color .14s;
+}
+.bame-rail-btn:hover {
+  background: var(--surf2);
+}
+.bame-rail-btn.is-active {
+  background: var(--surf3);
+  color: var(--txt);
+  font-weight: 700;
+}
+
+@keyframes bamePulse {
+  0%,100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--green) 40%, transparent) }
+  50%      { box-shadow: 0 0 0 5px transparent }
+}
+
+/* Home — category cards */
+.bame-cat-card {
+  display: block;
+  border-radius: 18px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  text-decoration: none;
+  transition: border-color .15s, transform .15s;
+}
+.bame-cat-card:hover {
+  border-color: var(--line2);
+  transform: translateY(-3px);
+}
+
+/* Home — popular product cards */
+.bame-popular-card {
+  display: block;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  overflow: hidden;
+  text-decoration: none;
+  transition: border-color .15s, transform .15s, box-shadow .15s;
+}
+.bame-popular-card:hover {
+  border-color: var(--line2);
+  transform: translateY(-3px);
+  box-shadow: 0 16px 36px -18px rgba(0,0,0,.6);
+}
+
+/* Home — local selector list items */
+.bame-local-item {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  width: 100%;
+  text-align: left;
+  padding: 14px;
+  border-radius: 16px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  cursor: pointer;
+  transition: border-color .15s, transform .12s;
+}
+.bame-local-item:hover {
+  transform: translateY(-2px);
+}
+.bame-local-item.is-active {
+  border: 1.5px solid var(--orange);
+  background: color-mix(in srgb, var(--orange) 9%, transparent);
+}
+
+/* Profile tab buttons */
+.bame-tab-btn {
+  flex: none;
+  padding: 9px 16px;
+  border-radius: 99px;
+  border: 1px solid var(--line);
+  background: var(--surf2);
+  color: var(--mut);
+  font: 600 0.8438rem 'Plus Jakarta Sans', sans-serif;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background .15s, color .15s, border-color .15s;
+}
+.bame-tab-btn.is-active {
+  border-color: var(--txt);
+  background: var(--txt);
+  color: var(--bg);
+  font-weight: 700;
+}
+
+/* Profile — favorite dish cards */
+.bame-fav-card {
+  display: block;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  overflow: hidden;
+  text-decoration: none;
+  transition: border-color .15s, transform .15s;
+}
+.bame-fav-card:hover {
+  border-color: var(--line2);
+  transform: translateY(-3px);
+}
+
+/* Contact channel cards */
+.bame-channel-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 18px;
+  text-decoration: none;
+  transition: border-color .15s, transform .12s;
+  color: inherit;
+}
+.bame-channel-card:hover {
+  border-color: var(--line2);
+  transform: translateY(-2px);
+}
+
+/* Contact local action buttons */
+.bame-local-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  font: 700 0.8125rem 'Plus Jakarta Sans', sans-serif;
+  color: var(--txt);
+  background: var(--surf2);
+  border: 1px solid var(--line2);
+  padding: 11px;
+  border-radius: 11px;
+  text-decoration: none;
+  transition: border-color .15s;
+}
+.bame-local-btn:hover {
+  border-color: var(--mut);
+}
+
+/* Locals page — card action buttons */
+.bame-local-pg-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font: 800 0.8125rem 'Plus Jakarta Sans', sans-serif;
+  color: var(--txt);
+  background: var(--surf2);
+  border: 1px solid var(--line2);
+  padding: 12px;
+  border-radius: 12px;
+  text-decoration: none;
+  transition: border-color .15s;
+}
+.bame-local-pg-btn:hover {
+  border-color: var(--mut);
+}
+.bame-local-pg-cta {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font: 800 0.8125rem 'Plus Jakarta Sans', sans-serif;
+  color: #fff;
+  background: var(--orange);
+  padding: 12px;
+  border-radius: 12px;
+  box-shadow: 0 6px 14px -7px color-mix(in srgb, var(--orange) 55%, transparent);
+  text-decoration: none;
+  transition: background .15s;
+}
+.bame-local-pg-cta:hover {
+  background: var(--orangeH);
+}
+
+/* Dropdown de usuario en navbar */
+.bame-dd-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: transparent;
+  color: rgba(255,255,255,.72);
+  font: 600 0.8438rem 'Plus Jakarta Sans', sans-serif;
+  text-decoration: none;
+  transition: background .12s, color .12s;
+  text-align: left;
+  box-sizing: border-box;
+}
+.bame-dd-option:hover {
+  background: rgba(255,255,255,.08);
+  color: #fff;
+}
+.bame-dd-option--danger {
+  color: rgba(255,100,34,.85);
+}
+.bame-dd-option--danger:hover {
+  background: rgba(255,100,34,.1);
+  color: #FF6422;
+}
+
+/* FAQ accordion toggle button */
+.bame-faq-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 17px 18px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+}
+
+/* Carta page — rail visible en ≥768px, chips ocultos en ≥768px */
+@media (min-width: 768px) {
+  .bame-carta-rail  { display: block !important; }
+  .bame-carta-chips { display: none !important; }
+}
+
+/* Category chips (mobile) */
+.bame-chip {
+  flex: none;
+  padding: 9px 15px;
+  border-radius: 99px;
+  border: 1px solid var(--line);
+  background: var(--surf2);
+  color: var(--mut);
+  font-size: 0.8438rem;
+  font-weight: 600;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.bame-chip.is-active {
+  border-color: var(--yellow);
+  background: var(--yellow);
+  color: #141210;
+  font-weight: 700;
+}
+
+/* ══════════════════════════════════════════
+   Dark Mode — data-theme="dark" on <html>
+   Estética nocturna neón: fondos oscuros, acentos brillantes.
+   ══════════════════════════════════════════ */
+
+html[data-theme='dark'] {
+  /* BAME dark theme vars */
+  --bg: #141210;
+  --surface: #1c1915;
+  --surf2: #252017;
+  --surf3: #2f2920;
+  --line: #332e24;
+  --line2: #443c2d;
+  --txt: #f7f2e8;
+  --mut: #a79d8b;
+  --dim: #7a715f;
+  --thumbA: #2a2419;
+  --thumbB: #221d15;
+  --cartBg: #1a1712;
+  --red: #ff6b5e;
+
+  /* Brand — naranja profundo que destaca en oscuro */
+  --color-brand: #FF5722;
+  --color-brand-hover: #FF7043;
+
+  /* Accent — amarillo neón */
+  --color-accent: #FFEA00;
+  --color-accent-hover: #FFF176;
+
+  /* Success */
+  --color-success: #22c55e;
+  --color-success-hover: #16a34a;
+
+  --color-alert: #FFEA00;
+
+  /* Surfaces — Dark */
+  --color-surface-dark: #09090B;   /* negro puro — navbar, footer */
+  --color-surface-card: #27272A;   /* zinc-800 — tarjetas */
+  --color-surface-muted: #3F3F46;  /* zinc-700 — fondos secundarios */
+  --color-surface-page: #09090B;   /* fondo principal dark */
+
+  /* Text — Dark */
+  --color-text-primary: #FAFAFA;   /* zinc-50 — texto principal */
+  --color-text-secondary: #D4D4D8; /* zinc-300 */
+  --color-text-muted: #71717A;     /* zinc-500 */
+  --color-text-inverse: #FFFFFF;
+  --color-text-link: #FFEA00;      /* amarillo neón — links en dark */
+
+  /* Borders — Dark */
+  --color-border-default: #52525B;  /* zinc-600 */
+  --color-border-muted: #3F3F46;
+
+  /* Form — Dark */
+  --color-form-bg: #27272A;
+  --color-form-border: #52525B;
+  --color-form-focus-ring: #FFEA00;
+  --color-form-placeholder: #71717A;
+}
+
+/* ══════════════════════════════════════════
+   Global styles
+   ══════════════════════════════════════════ */
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+app-root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: var(--color-surface-page);
+  color: var(--color-text-primary);
+  padding-top: 84px;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-sans);
+  background-color: var(--color-surface-page);
+  color: var(--color-text-primary);
+  overflow-x: hidden;
+}
+
+/* CDK Overlay backdrop transparente para dropdowns */
+.cdk-overlay-transparent-backdrop {
+  background: transparent;
+}
+
+/* Ocultar scrollbar manteniendo scroll funcional (nav de categorías en móvil) */
+.scrollbar-hide {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+[id] {
+  scroll-margin-top: 9rem;
+}
+/* Home — mapa Leaflet de locales */
+.bame-leaflet-map {
+  position: relative;
+  z-index: 0;
+  width: 100%;
+  height: 280px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  background: #181713;
+  isolation: isolate;
+}
+
+.bame-leaflet-map .leaflet-tile-pane {
+  filter: brightness(.72) saturate(.72) contrast(1.08);
+}
+
+.bame-leaflet-map .leaflet-control-zoom a,
+.bame-leaflet-map .leaflet-control-attribution {
+  border-color: color-mix(in srgb, var(--line) 75%, transparent);
+  background: color-mix(in srgb, #181713 90%, transparent);
+  color: #f5f1e8;
+}
+
+.bame-map-marker {
+  border: 0;
+  background: transparent;
+}
+
+.bame-map-marker span {
+  display: block;
+  width: 34px;
+  height: 34px;
+  transform: rotate(45deg);
+  border: 3px solid #fff;
+  border-radius: 50% 50% 50% 0;
+  background: var(--orange);
+  box-shadow: 0 8px 20px color-mix(in srgb, var(--orange) 65%, transparent);
+}
+
+.bame-map-popup {
+  display: flex;
+  max-width: 220px;
+  flex-direction: column;
+  gap: 3px;
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+}
+
+.bame-map-popup strong {
+  color: #181713;
+  font-size: 0.875rem;
+}
+
+.bame-map-popup span {
+  color: #57534e;
+  font-size: 0.75rem;
+}

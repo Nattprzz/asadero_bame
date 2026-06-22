@@ -1,0 +1,152 @@
+<div style="background:var(--bg); color:var(--txt); min-height:100%;">
+  <div style="max-width:1280px; margin:0 auto; padding:18px; display:flex; gap:22px; align-items:flex-start;">
+
+    <!-- ═══ RAIL CATEGORÍAS (desktop) ═══ -->
+    <aside style="position:sticky; top:90px; width:212px; flex:none; display:none;" class="bame-carta-rail">
+      <div style="font:700 0.6875rem 'Plus Jakarta Sans',sans-serif; letter-spacing:.14em; color:var(--dim); padding:4px 12px 10px;">CATEGORÍAS</div>
+      <div style="display:flex; flex-direction:column; gap:2px;">
+        @for (cat of railCats; track cat.id) {
+          <button
+            (click)="setActiveCat(cat.id)"
+            class="bame-rail-btn"
+            [class.is-active]="activeCat() === cat.id && !query()"
+          >
+            <span>{{ cat.label }}</span>
+            <span style="font-size: 0.6875rem; font-weight:700; font-family:'Plus Jakarta Sans',sans-serif; color:var(--dim);">{{ cat.count }}</span>
+          </button>
+        }
+      </div>
+      <div style="margin-top:16px; padding:14px; background:var(--surf2); border:1px solid var(--line); border-radius:16px;">
+        <div style="font:700 0.8125rem 'Bricolage Grotesque',sans-serif; color:var(--txt);">¿Quieres pedir?</div>
+        <div style="font:500 0.75rem/1.5 'Plus Jakarta Sans',sans-serif; color:var(--mut); margin-top:5px;">Elige tu asadero y haz tu pedido online. Recogida en 20–30 min.</div>
+        <a routerLink="/home/locales" style="display:block; margin-top:12px; text-align:center; font:800 0.8125rem 'Plus Jakarta Sans',sans-serif; color:#fff; background:var(--orange); padding:10px; border-radius:11px; text-decoration:none; box-shadow:0 6px 16px -6px var(--orange);">Ver locales →</a>
+      </div>
+    </aside>
+
+    <!-- ═══ MAIN ═══ -->
+    <main style="flex:1; min-width:0;">
+
+      <!-- HERO -->
+      <div style="position:relative; border-radius:24px; overflow:hidden; border:1px solid var(--line); margin-bottom:18px; min-height:140px; background:repeating-linear-gradient(125deg,var(--thumbA),var(--thumbA) 13px,var(--thumbB) 13px,var(--thumbB) 26px);">
+        <div style="position:absolute; inset:0; background:linear-gradient(105deg,color-mix(in srgb,var(--bg) 78%,transparent) 0%,color-mix(in srgb,var(--bg) 30%,transparent) 60%,transparent 100%);"></div>
+        <div style="position:relative; padding:24px;">
+          <h1 style="font:800 1.75rem/1.02 'Bricolage Grotesque',sans-serif; color:var(--txt); margin:0; letter-spacing:-.01em;">Nuestra carta</h1>
+          <div style="font:500 0.8125rem 'Plus Jakarta Sans',sans-serif; color:var(--mut); margin-top:8px;">Consulta los platos disponibles. Para hacer un pedido, <a routerLink="/home/locales" style="color:var(--orange); font-weight:600; text-decoration:none;">elige tu local →</a></div>
+        </div>
+      </div>
+
+      <!-- SEARCH -->
+      <div style="position:relative; margin-bottom:14px;">
+        <span style="position:absolute; left:15px; top:50%; transform:translateY(-50%); color:var(--dim); pointer-events:none; display:flex;"><tabler-icon icon="search" [size]="17" /></span>
+        <input
+          [value]="query()"
+          (input)="setQuery($event)"
+          placeholder="Buscar platos…"
+          style="width:100%; background:var(--surf2); border:1px solid var(--line); border-radius:14px; padding:13px 40px 13px 42px; color:var(--txt); font:500 0.9375rem 'Plus Jakarta Sans',sans-serif; outline:none; transition:border-color .15s; box-sizing:border-box;"
+        />
+        @if (query()) {
+          <button
+            (click)="clearQuery()"
+            style="position:absolute; right:10px; top:50%; transform:translateY(-50%); background:var(--surf3); border:none; color:var(--mut); width:26px; height:26px; border-radius:50%; cursor:pointer; display:flex; align-items:center; justify-content:center;"
+          ><tabler-icon icon="x" [size]="14" /></button>
+        }
+      </div>
+
+      <!-- CHIPS MÓVIL -->
+      <div class="bame-carta-chips" style="display:flex; gap:8px; overflow-x:auto; padding:2px 0 12px; scrollbar-width:none; -ms-overflow-style:none;">
+        @for (cat of railCats; track cat.id) {
+          <button
+            (click)="setActiveCat(cat.id)"
+            class="bame-chip"
+            [class.is-active]="activeCat() === cat.id && !query()"
+          >{{ cat.label }}</button>
+        }
+      </div>
+
+      <!-- SECTION TITLE -->
+      <div style="display:flex; align-items:baseline; justify-content:space-between; margin:6px 2px 14px;">
+        <h2 style="font:800 1.375rem 'Bricolage Grotesque',sans-serif; color:var(--txt); margin:0; letter-spacing:-.01em;">{{ sectionTitle }}</h2>
+        <span style="font:600 0.8125rem 'Plus Jakarta Sans',sans-serif; color:var(--dim);">{{ sectionCount }}</span>
+      </div>
+
+      <!-- SKELETONS -->
+      @if (loading()) {
+        <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(min(310px,100%),1fr)); gap:14px;">
+          @for (s of skeletons; track s) {
+            <div style="display:flex; gap:14px; padding:14px; background:var(--surface); border:1px solid var(--line); border-radius:18px; height:124px;">
+              <div style="flex:1; display:flex; flex-direction:column; gap:9px;">
+                <div style="height:15px; width:62%; border-radius:6px; background:linear-gradient(90deg,var(--surf2) 25%,var(--surf3) 50%,var(--surf2) 75%); background-size:380px 100%; animation:bameShimmer 1.3s infinite linear;"></div>
+                <div style="height:11px; width:88%; border-radius:6px; background:var(--surf2);"></div>
+                <div style="height:11px; width:48%; border-radius:6px; background:var(--surf2);"></div>
+                <div style="flex:1;"></div>
+                <div style="height:16px; width:34%; border-radius:6px; background:linear-gradient(90deg,var(--surf2) 25%,var(--surf3) 50%,var(--surf2) 75%); background-size:380px 100%; animation:bameShimmer 1.3s infinite linear;"></div>
+              </div>
+              <div style="width:96px; height:96px; border-radius:14px; flex:none; background:linear-gradient(90deg,var(--surf2) 25%,var(--surf3) 50%,var(--surf2) 75%); background-size:380px 100%; animation:bameShimmer 1.3s infinite linear;"></div>
+            </div>
+          }
+        </div>
+      } @else if (error()) {
+        <div style="text-align:center; padding:60px 20px; color:var(--mut); font:500 0.9375rem 'Plus Jakarta Sans',sans-serif;">{{ error() }}</div>
+      } @else if (filteredItems.length > 0) {
+
+        <!-- PRODUCT GRID (read-only) -->
+        <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(min(310px,100%),1fr)); gap:14px;">
+          @for (item of filteredItems; track item.id) {
+            <div style="display:flex; gap:14px; padding:14px; background:var(--surface); border:1px solid var(--line); border-radius:18px; position:relative;">
+
+              <!-- Info -->
+              <div style="flex:1; min-width:0; display:flex; flex-direction:column;">
+                <div style="display:flex; align-items:center; gap:7px;">
+                  <h3 style="font:700 0.9688rem/1.22 'Bricolage Grotesque',sans-serif; color:var(--txt); margin:0;">{{ getProductName(item) }}</h3>
+                  @if (item.destacado) {
+                    <span style="flex:none; font:800 0.5625rem 'Plus Jakarta Sans',sans-serif; letter-spacing:.06em; color:#141210; background:var(--yellow); padding:2px 6px; border-radius:6px;">TOP</span>
+                  }
+                </div>
+                <p style="font:400 0.7813rem/1.45 'Plus Jakarta Sans',sans-serif; color:var(--mut); margin:6px 0 0; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">{{ getProductDesc(item) }}</p>
+                <div style="flex:1; min-height:8px;"></div>
+                <div style="display:flex; align-items:center; gap:7px; flex-wrap:wrap;">
+                  <span style="font:800 1rem 'Bricolage Grotesque',sans-serif; color:var(--txt);">{{ moneyStr(item.precio) }}</span>
+                  @for (al of (item.alergenosDetalle ?? []).slice(0, 4); track al.id) {
+                    <span [title]="allergenTitle(al)" style="font:700 0.5625rem 'Plus Jakarta Sans',sans-serif; letter-spacing:.03em; color:var(--dim); border:1px solid var(--line); border-radius:5px; padding:2px 4px;">{{ allergenAbbr(al) }}</span>
+                  }
+                </div>
+              </div>
+
+              <!-- Thumbnail (sin controles) -->
+              <div style="flex:none;">
+                <div style="width:96px; height:96px; border-radius:14px; overflow:hidden; background:repeating-linear-gradient(135deg,var(--thumbA),var(--thumbA) 7px,var(--thumbB) 7px,var(--thumbB) 14px); display:flex; align-items:center; justify-content:center;">
+                  @if (item.foto) {
+                    <img [src]="item.foto" [alt]="getProductName(item)" style="width:100%; height:100%; object-fit:cover;" loading="lazy" />
+                  } @else {
+                    <span style="font:800 1.625rem 'Bricolage Grotesque',sans-serif; color:color-mix(in srgb,var(--yellow) 48%,transparent);">{{ getInitials(getProductName(item)) }}</span>
+                  }
+                </div>
+              </div>
+
+            </div>
+          }
+        </div>
+
+      } @else {
+        <!-- Sin resultados -->
+        <div style="text-align:center; padding:60px 20px;">
+          <div style="width:72px; height:72px; margin:0 auto 18px; border-radius:20px; background:var(--surf2); border:1px solid var(--line); display:flex; align-items:center; justify-content:center; color:var(--dim);"><tabler-icon icon="search-off" [size]="28" /></div>
+          <div style="font:700 1.125rem 'Bricolage Grotesque',sans-serif; color:var(--txt);">Sin resultados</div>
+          <div style="font:500 0.875rem 'Plus Jakarta Sans',sans-serif; color:var(--mut); margin-top:6px;">No encontramos "{{ query() }}". Prueba con otra búsqueda.</div>
+          <button (click)="clearQuery()" style="margin-top:18px; background:var(--surf2); border:1px solid var(--line2); color:var(--txt); font:600 0.875rem 'Plus Jakarta Sans',sans-serif; padding:11px 20px; border-radius:12px; cursor:pointer;">Ver toda la carta</button>
+        </div>
+      }
+
+      <!-- CTA BOTTOM -->
+      @if (!loading() && !error() && filteredItems.length > 0) {
+        <div style="margin-top:36px; padding:28px; border-radius:22px; background:repeating-linear-gradient(125deg,var(--thumbA),var(--thumbA) 13px,var(--thumbB) 13px,var(--thumbB) 26px); border:1px solid var(--line); text-align:center;">
+          <div style="font:800 1.375rem 'Bricolage Grotesque',sans-serif; color:var(--txt);">¿Te apetece algo?</div>
+          <div style="font:500 0.875rem 'Plus Jakarta Sans',sans-serif; color:var(--mut); margin-top:6px;">Elige tu asadero y haz tu pedido online. Listo en 20–30 min.</div>
+          <a routerLink="/home/locales" style="display:inline-flex; margin-top:18px; font:800 0.9375rem 'Plus Jakarta Sans',sans-serif; color:#fff; background:var(--orange); padding:14px 28px; border-radius:13px; text-decoration:none; box-shadow:0 8px 20px -10px color-mix(in srgb,var(--orange) 55%,transparent);">Pedir ahora →</a>
+        </div>
+      }
+
+    </main>
+  </div>
+  <div style="height:40px;"></div>
+</div>

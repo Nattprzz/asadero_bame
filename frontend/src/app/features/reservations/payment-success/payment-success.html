@@ -1,0 +1,97 @@
+<div class="mx-auto w-full max-w-7xl px-4 pt-8 md:px-6">
+  <app-breadcrumb-bar
+    [crumbs]="[
+      { label: t().nav.locales, route: '/home/locales' },
+      { label: viaLocal ? t().payment.payAtStoreSuccessTitle : t().payment.successTitle, route: '' },
+    ]"
+  />
+</div>
+
+<div class="mx-auto flex w-full max-w-2xl flex-col items-center px-4 py-16 text-center md:px-6 md:py-24">
+
+  <div
+    class="mb-8 flex size-24 items-center justify-center rounded-full ring-2"
+    [class]="viaLocal ? 'bg-accent/10 ring-accent/20' : 'bg-brand/10 ring-brand/20'"
+    aria-hidden="true"
+  >
+    <tabler-icon
+      icon="circle-check"
+      [size]="48"
+      [class]="viaLocal ? 'text-accent' : 'text-brand'"
+    />
+  </div>
+
+  @if (viaLocal) {
+    <h1
+      class="mb-4 font-display text-h1 uppercase leading-tight tracking-wide text-text-primary"
+      role="status"
+      aria-live="polite"
+    >
+      {{ t().payment.payAtStoreSuccessTitle }}
+    </h1>
+
+    <p class="mb-3 max-w-md text-body text-text-secondary">
+      {{ t().payment.payAtStoreSuccessDesc }}
+    </p>
+    <p class="mb-8 max-w-md text-body-sm text-text-muted">
+      {{ t().payment.payAtStorePickup }}
+      {{ t().payment.payAtStoreContact }}
+    </p>
+
+    <div
+      class="mb-10 flex items-start gap-2 rounded-xl border border-accent/30 bg-accent/10 px-5 py-3 text-left"
+      role="note"
+    >
+      <tabler-icon icon="building-store" [size]="16" class="mt-0.5 shrink-0 text-accent" aria-hidden="true" />
+      <p class="text-body-sm text-text-secondary">
+        <strong class="text-text-primary">{{ t().payment.payAtStoreMethodTitle }}</strong>
+        {{ t().payment.payAtStoreMethodDesc }}
+      </p>
+    </div>
+  } @else {
+    <h1
+      class="mb-4 font-display text-h1 uppercase leading-tight tracking-wide text-text-primary"
+      role="status"
+      aria-live="polite"
+    >
+      {{ t().payment.successTitle }}
+    </h1>
+
+    <p class="mb-3 max-w-md text-body text-text-secondary">
+      {{ t().payment.successStripeDesc }}
+    </p>
+    <p class="mb-8 max-w-md text-body-sm text-text-muted">
+      {{ t().payment.successQuestion }}
+    </p>
+
+    <div
+      class="mb-10 flex items-start gap-2 rounded-xl border border-accent/30 bg-accent/10 px-5 py-3 text-left"
+      role="note"
+    >
+      <tabler-icon icon="alert-triangle" [size]="16" class="mt-0.5 shrink-0 text-accent" aria-hidden="true" />
+      <p class="text-body-sm text-text-secondary">
+        <strong class="text-text-primary">{{ t().payment.testModeTitle }}</strong>
+        {{ t().payment.testModeDesc }}
+      </p>
+    </div>
+  }
+
+  <div class="flex flex-col gap-3 sm:flex-row sm:justify-center">
+    <a
+      routerLink="/home/locales"
+      class="inline-flex items-center justify-center gap-2 rounded-xl border border-border-default bg-surface-card px-6 py-3 font-bold text-text-primary transition-colors hover:bg-surface-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/50"
+    >
+      <tabler-icon icon="building-store" [size]="20" aria-hidden="true" />
+      {{ t().payment.moreLocals }}
+    </a>
+
+    <a
+      routerLink="/home"
+      class="inline-flex items-center justify-center gap-2 rounded-xl bg-brand px-6 py-3 font-bold text-text-inverse transition-colors hover:bg-brand-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/50"
+    >
+      <tabler-icon icon="home" [size]="20" aria-hidden="true" />
+      {{ t().payment.backHome }}
+    </a>
+  </div>
+
+</div>

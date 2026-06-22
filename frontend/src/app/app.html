@@ -1,0 +1,11 @@
+<app-background />
+
+@if (!hidePublicChrome()) {
+  <app-navbar />
+}
+
+<router-outlet />
+
+@if (!hidePublicChrome()) {
+  <app-footer />
+}

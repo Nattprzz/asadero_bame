@@ -1,0 +1,31 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# services.yaml — configuración de servicios y dependencias.
+#
+# Define los parámetros globales de la aplicación y cómo Symfony registra
+# automáticamente los servicios disponibles mediante inyección de dependencias.
+# ─────────────────────────────────────────────────────────────────────────────
+
+parameters:
+    env(STRIPE_SECRET_KEY): ''
+    env(STRIPE_WEBHOOK_SECRET): ''
+    # Se valida al habilitar Stripe; el valor vacio nunca permite crear Checkout.
+    env(CHECKOUT_ALLOWED_ORIGINS): ''
+
+    # Tiempo de validez de los tokens definido mediante variable de entorno.
+    token_ttl_days: '%env(int:BAME_TOKEN_TTL_DAYS)%'
+
+services:
+    _defaults:
+        # Inyecta automáticamente las dependencias necesarias.
+        autowire: true
+
+        # Registra automáticamente etiquetas y configuraciones habituales.
+        autoconfigure: true
+
+        bind:
+            # Hace disponible este parámetro en los servicios que lo necesiten.
+            int $tokenTtlDays: '%token_ttl_days%'
+
+    # Registra automáticamente todas las clases de la carpeta src como servicios.
+    App\:
+        resource: '../src/'

@@ -1,0 +1,19 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# doctrine_migrations.yaml — configuración de migraciones de base de datos.
+#
+# Define cómo Doctrine gestiona las migraciones del proyecto. Las migraciones
+# permiten mantener un control de versiones sobre la estructura de la base de
+# datos y aplicar cambios de forma segura entre entornos.
+# ─────────────────────────────────────────────────────────────────────────────
+
+doctrine_migrations:
+    # ─── Rutas y namespaces de migración ──────────────────────────────────────
+    # Relaciona el namespace de las migraciones con la carpeta donde se almacenan.
+    migrations_paths:
+        # '%kernel.project_dir%' apunta automáticamente a la carpeta raíz del proyecto.
+        DoctrineMigrations: '%kernel.project_dir%/migrations'
+
+    # ─── Integración con herramientas de desarrollo ───────────────────────────
+    # Permite mostrar información de las migraciones en el Web Profiler.
+    # Se mantiene desactivado para evitar procesamiento adicional.
+    enable_profiler: false

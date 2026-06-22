@@ -1,0 +1,66 @@
+<div class="mx-auto w-full max-w-7xl px-4 md:px-6 py-8">
+  <h1
+    class="font-display text-h1 uppercase tracking-wide leading-none text-text-primary underline underline-offset-6 decoration-[3px] decoration-accent w-fit mb-10"
+  >
+    Panel de Administración
+  </h1>
+
+  <h2
+    class="text-h2 font-semibold mb-6 underline underline-offset-6 decoration-[3px] decoration-accent w-fit"
+  >
+    Locales
+  </h2>
+
+  @if (loading()) {
+    <div class="flex items-center justify-center py-20 text-text-secondary gap-3">
+      <tabler-icon icon="refresh" [size]="24" class="animate-spin text-brand" />
+      <span>Cargando locales...</span>
+    </div>
+  } @else if (error()) {
+    <div class="rounded-xl border border-red-500 bg-red-50 px-6 py-4 text-red-700 dark:bg-red-900/20 dark:text-red-400">
+      <tabler-icon icon="alert-triangle" [size]="20" class="inline mr-2" />
+      {{ error() }}
+    </div>
+  } @else if (locals().length === 0) {
+    <div class="flex flex-col items-center justify-center py-20 text-text-muted gap-3">
+      <tabler-icon icon="building-store" [size]="48" />
+      <span>No hay locales registrados.</span>
+    </div>
+  } @else {
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      @for (local of locals(); track local.id) {
+        <div
+          class="group flex flex-col h-full bg-surface-card rounded-xl overflow-hidden border-0 shadow-[0_1px_4px_rgba(0,0,0,0.4)]"
+        >
+          <div class="relative">
+            <img [src]="local.foto" [alt]="local.nombre" class="w-full h-[220px] object-cover" />
+          </div>
+
+          <div class="p-5 flex flex-col gap-3 grow">
+            <h3 class="text-h3 font-bold text-text-primary">{{ local.nombre }}</h3>
+
+            <div class="flex items-center gap-2 text-text-secondary leading-tight">
+              <tabler-icon icon="map-pin" [size]="16" class="text-brand shrink-0" />
+              <span class="text-body-sm">{{ local.ubicacion }}</span>
+            </div>
+
+            <div class="flex items-center gap-2 text-text-secondary leading-tight">
+              <tabler-icon icon="phone" [size]="16" class="text-accent shrink-0" />
+              <span class="text-body-sm">{{ local.telefono || 'Sin teléfono' }}</span>
+            </div>
+
+            <div class="mt-auto pt-2">
+              <a
+                [routerLink]="['/admin/local', local.id]"
+                class="flex items-center justify-center rounded-lg font-bold text-btn text-text-inverse py-2 px-4 bg-brand hover:bg-brand-hover transition-colors w-full"
+              >
+                <tabler-icon icon="settings" [size]="16" class="mr-2" />
+                <span>Gestionar local</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>

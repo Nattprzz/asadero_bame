@@ -1,0 +1,54 @@
+<div
+  class="mx-auto flex min-h-[60vh] w-full max-w-7xl flex-col items-center justify-center px-4 py-16 text-center md:px-6"
+>
+  <div class="mb-6">
+    <span class="font-display text-8xl font-bold text-text-muted/30 md:text-9xl">
+      503
+    </span>
+  </div>
+
+  <h1
+    class="font-display w-fit text-h1 uppercase tracking-wide leading-none text-text-primary underline underline-offset-6 decoration-[3px] decoration-accent mb-4"
+  >
+    Servicio temporalmente no disponible
+  </h1>
+
+  <p class="mb-8 max-w-xl text-body text-text-muted">
+    Estamos realizando tareas de mantenimiento o el servicio está experimentando
+    una carga superior a la habitual. Inténtalo de nuevo dentro de unos minutos.
+  </p>
+
+  <div class="flex flex-wrap items-center justify-center gap-3">
+    <button
+      type="button"
+      (click)="reload()"
+      class="inline-flex items-center gap-2 rounded-xl bg-brand px-8 py-3 font-bold text-text-inverse transition-colors hover:bg-brand-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/50 focus-visible:ring-offset-2"
+    >
+      <tabler-icon icon="refresh" [size]="20" aria-hidden="true" />
+      <span>Reintentar</span>
+    </button>
+
+    <a
+      routerLink="/home"
+      class="inline-flex items-center gap-2 rounded-xl border border-border-default bg-surface-card px-8 py-3 font-bold text-text-primary transition-colors hover:border-accent hover:text-accent"
+    >
+      <tabler-icon icon="home" [size]="20" aria-hidden="true" />
+      <span>Volver al inicio</span>
+    </a>
+  </div>
+
+  <div
+    class="mt-10 rounded-xl border border-border-default bg-surface-card px-6 py-4 text-body-sm text-text-secondary"
+  >
+    Código de error:
+    <span class="font-bold text-text-primary">503</span>
+  </div>
+
+  <div
+    class="mt-4 rounded-xl border border-accent/30 bg-surface-card px-6 py-4 max-w-lg"
+  >
+    <p class="text-body-sm text-text-secondary">
+      El servicio volverá a estar disponible lo antes posible. Gracias por tu paciencia.
+    </p>
+  </div>
+</div>

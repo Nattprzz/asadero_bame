@@ -1,0 +1,184 @@
+<div style="background:var(--bg); color:var(--txt); min-height:100%; font-family:'Plus Jakarta Sans',system-ui,sans-serif;">
+  <div style="max-width:1180px; margin:0 auto; padding:0 18px;">
+
+    <!-- HERO -->
+    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr)); gap:28px; align-items:center; padding:clamp(28px,5vw,46px) 0 clamp(20px,4vw,36px);">
+      <div>
+        <h1 style="font:800 clamp(2.375rem,6vw, 3.75rem)/0.98 'Bricolage Grotesque',sans-serif; color:var(--txt); margin:0; letter-spacing:-.02em;">{{ t().home.heroTitle }}</h1>
+        <p style="font:500 1.0625rem/1.55 'Plus Jakarta Sans',sans-serif; color:var(--mut); margin:18px 0 0; max-width:440px;">
+          {{ t().home.heroDesc }}
+        </p>
+        <div style="display:flex; flex-wrap:wrap; gap:12px; margin-top:28px;">
+          <a routerLink="/home/carta" style="display:inline-flex; align-items:center; gap:9px; font:800 1rem 'Plus Jakarta Sans',sans-serif; color:#fff; background:var(--orange); padding:16px 26px; border-radius:14px; box-shadow:0 9px 22px -10px color-mix(in srgb,var(--orange) 55%,transparent); transition:background .15s, transform .12s; text-decoration:none;">{{ t().home.exploreMenu }} →</a>
+        </div>
+      </div>
+      <div
+        style=" 
+          position:relative;
+          border-radius:26px;
+          overflow:hidden;
+          border:1px solid var(--line);
+          min-height:clamp(200px,45vw,380px);
+        "
+      >
+        <img
+          src="/img/chicken.jpg"
+          alt="Pollo asado de BAME"
+          style="
+            width:100%;
+            height:100%;
+            position:absolute;
+            inset:0;
+            object-fit:cover;
+          "
+        />
+
+        <div
+          style="
+            position:absolute;
+            inset:0;
+            background:linear-gradient(
+              to top,
+              rgba(0,0,0,.55),
+              rgba(0,0,0,.15),
+              transparent
+            );
+          "
+        ></div>
+      </div>
+    </div>
+
+    <!-- CATEGORÍAS RÁPIDAS -->
+    @if (cats().length > 0) {
+      <div style="padding:18px 0 8px;">
+        <div style="display:flex; align-items:baseline; justify-content:space-between; margin-bottom:16px;">
+          <h2 style="font:800 1.625rem 'Bricolage Grotesque',sans-serif; color:var(--txt); margin:0; letter-spacing:-.01em;">{{ t().home.exploreMenu }}</h2>
+          <a routerLink="/home/locales" style="font:700 0.875rem 'Plus Jakarta Sans',sans-serif; color:var(--orange); text-decoration:none;">{{ t().home.viewAll }}</a>
+        </div>
+        <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(min(155px,45%),1fr)); gap:12px;">
+          @for (c of cats(); track c.label) {
+            <a routerLink="/home/locales" class="bame-cat-card">
+              <div style="height:90px; overflow:hidden; background:var(--surf2);">
+                <img
+                  [src]="c.img"
+                  [alt]="c.label"
+                  loading="lazy"
+                  style="width:100%; height:100%; object-fit:cover;"
+                />
+              </div>
+              <div style="padding:12px 14px;">
+                <div style="font:700 0.9063rem 'Bricolage Grotesque',sans-serif; color:var(--txt);">{{ c.label }}</div>
+                <div style="font:600 0.75rem 'Plus Jakarta Sans',sans-serif; color:var(--mut); margin-top:3px;">{{ c.count }} {{ t().home.dishes }}</div>
+              </div>
+            </a>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- LO MÁS PEDIDO -->
+    @if (populars().length > 0) {
+      <div style="padding:36px 0 8px;">
+        <div style="display:flex; align-items:baseline; justify-content:space-between; margin-bottom:16px;">
+          <h2 style="font:800 1.625rem 'Bricolage Grotesque',sans-serif; color:var(--txt); margin:0; letter-spacing:-.01em;">{{ t().home.topOrders }}</h2>
+          <span style="font:600 0.8125rem 'Plus Jakarta Sans',sans-serif; color:var(--dim);">{{ t().home.topFavs }}</span>
+        </div>
+        <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(min(230px,100%),1fr)); gap:14px;">
+          @for (p of populars(); track p.id) {
+            <a routerLink="/home/locales" class="bame-popular-card">
+              <div style="position:relative; height:140px; overflow:hidden; background:repeating-linear-gradient(135deg,var(--thumbA),var(--thumbA) 9px,var(--thumbB) 9px,var(--thumbB) 18px); display:flex; align-items:center; justify-content:center;">
+                @if (p.img) {
+                  <img [src]="p.img" [alt]="p.name" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover;" loading="lazy" />
+                } @else {
+                  <span style="font:800 2.5rem 'Bricolage Grotesque',sans-serif; color:color-mix(in srgb,var(--yellow) 42%,transparent);">{{ p.ini }}</span>
+                }
+                <span style="position:absolute; left:12px; top:12px; font:800 0.5625rem 'Plus Jakarta Sans',sans-serif; letter-spacing:.06em; color:#141210; background:var(--yellow); padding:3px 7px; border-radius:6px;">TOP</span>
+                <div style="position:absolute; right:12px; bottom:12px; width:38px; height:38px; border-radius:12px; background:var(--orange); color:#fff; display:flex; align-items:center; justify-content:center; font-size: 1.3125rem; font-weight:700; box-shadow:0 6px 16px -5px var(--orange);">+</div>
+              </div>
+              <div style="padding:14px 15px;">
+                <div style="font:700 0.9375rem/1.25 'Bricolage Grotesque',sans-serif; color:var(--txt);">{{ p.name }}</div>
+                <div style="font:400 0.7813rem/1.4 'Plus Jakarta Sans',sans-serif; color:var(--mut); margin-top:5px; overflow:hidden; display:-webkit-box; -webkit-line-clamp:1; -webkit-box-orient:vertical;">{{ p.desc }}</div>
+                <div style="font:800 1.0625rem 'Bricolage Grotesque',sans-serif; color:var(--txt); margin-top:9px;">{{ p.priceStr }}</div>
+              </div>
+            </a>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- CÓMO FUNCIONA -->
+    <div style="padding:46px 0 8px;">
+      <h2 style="font:800 1.625rem 'Bricolage Grotesque',sans-serif; color:var(--txt); margin:0 0 18px; letter-spacing:-.01em;">{{ t().home.howOrderTitle }}</h2>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(min(240px,100%),1fr)); gap:14px;">
+        @for (s of steps(); track s.n) {
+          <div style="background:var(--surface); border:1px solid var(--line); border-radius:20px; padding:24px;">
+            <div style="width:42px; height:42px; border-radius:13px; background:var(--surf3); border:1px solid var(--line2); display:flex; align-items:center; justify-content:center; font:800 1.125rem 'Bricolage Grotesque',sans-serif; color:var(--yellow);">{{ s.n }}</div>
+            <div style="font:700 1.0625rem 'Bricolage Grotesque',sans-serif; color:var(--txt); margin-top:16px;">{{ s.title }}</div>
+            <div style="font:500 0.875rem/1.5 'Plus Jakarta Sans',sans-serif; color:var(--mut); margin-top:7px;">{{ s.body }}</div>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- ELIGE TU LOCAL -->
+    @if (locals().length > 0) {
+      <div id="local" style="padding:46px 0 8px;">
+        <div style="display:flex; flex-wrap:wrap; gap:6px 14px; align-items:baseline; justify-content:space-between; margin-bottom:18px;">
+          <h2 style="font:800 1.625rem 'Bricolage Grotesque',sans-serif; color:var(--txt); margin:0; letter-spacing:-.01em; white-space:nowrap;">{{ t().home.chooseLocal }}</h2>
+          <span style="font:600 0.8125rem 'Plus Jakarta Sans',sans-serif; color:var(--dim);">{{ locals().length }} {{ t().home.localsRegion }}</span>
+        </div>
+        <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(min(310px,100%),1fr)); gap:18px; align-items:start;">
+
+          <!-- Lista seleccionable -->
+          <div style="display:flex; flex-direction:column; gap:10px;">
+            @for (l of locals(); track l.id; let i = $index) {
+              <button (click)="setSelected(i)" class="bame-local-item" [class.is-active]="selectedIdx() === i">
+                <div
+                  style="width:38px; height:38px; flex:none; border-radius:11px; display:flex; align-items:center; justify-content:center;"
+                  [style.background]="selectedIdx() === i ? 'var(--orange)' : 'var(--surf3)'"
+                  [style.color]="selectedIdx() === i ? '#fff' : 'var(--yellow)'"
+                ><tabler-icon icon="building-store" [size]="18" /></div>
+                <div style="flex:1; min-width:0;">
+                  <div style="font:700 0.9375rem 'Bricolage Grotesque',sans-serif; color:var(--txt);">{{ l.name }}</div>
+                  <div style="font:500 0.7813rem 'Plus Jakarta Sans',sans-serif; color:var(--mut); margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ l.addr }}</div>
+                </div>
+              </button>
+            }
+          </div>
+
+          <!-- Detalle del local seleccionado -->
+          @if (selectedLocal(); as sel) {
+            <div style="position:sticky; top:96px; display:flex; flex-direction:column; gap:14px;">
+              <div
+                #localMap
+                class="bame-leaflet-map"
+                role="region"
+                [attr.aria-label]="'Mapa de ' + sel.name"
+              ></div>
+              <div style="background:var(--surface); border:1px solid var(--line); border-radius:22px; padding:22px;">
+                <div style="font:800 1.1875rem 'Bricolage Grotesque',sans-serif; color:var(--txt);">{{ sel.name }}</div>
+                <div style="font:500 0.875rem/1.5 'Plus Jakarta Sans',sans-serif; color:var(--mut); margin-top:6px;">{{ sel.addr }}</div>
+                <div style="display:flex; align-items:center; gap:7px; font:600 0.8438rem 'Plus Jakarta Sans',sans-serif; color:var(--txt); margin-top:10px;"><tabler-icon icon="phone" [size]="15" style="color:var(--yellow); flex:none;" /> {{ sel.phone }}</div>
+                @if (selectedHours().length > 0) {
+                  <div style="height:1px; background:var(--line); margin:16px 0;"></div>
+                  <div style="font:700 0.75rem 'Plus Jakarta Sans',sans-serif; letter-spacing:.08em; color:var(--dim); margin-bottom:9px;">{{ t().home.hoursLabel }}</div>
+                  @for (h of selectedHours(); track h.d) {
+                    <div style="display:flex; justify-content:space-between; gap:12px; padding:4px 0; font:500 0.8438rem 'Plus Jakarta Sans',sans-serif; color:var(--mut);">
+                      <span>{{ h.d }}</span>
+                      <span style="color:var(--txt); font-weight:600; text-align:right;">{{ h.t }}</span>
+                    </div>
+                  }
+                }
+                <div style="display:flex; gap:10px; margin-top:18px;">
+                  <a [href]="sel.telHref" style="flex:1; text-align:center; font:800 0.875rem 'Plus Jakarta Sans',sans-serif; color:var(--txt); background:var(--surf2); border:1px solid var(--line2); padding:13px; border-radius:13px; text-decoration:none;">{{ t().home.callBtn }}</a>
+                  <a [routerLink]="sel.reservaPath" style="flex:1.4; text-align:center; font:800 0.875rem 'Plus Jakarta Sans',sans-serif; color:#fff; background:var(--orange); padding:13px; border-radius:13px; box-shadow:0 8px 20px -8px var(--orange); text-decoration:none;">{{ t().home.orderHereBtn }}</a>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    }
+  </div>
+  <div style="height:56px;"></div>
+</div>

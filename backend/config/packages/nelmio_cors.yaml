@@ -1,0 +1,20 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# framework.yaml — configuración general del núcleo de Symfony.
+#
+# Aquí se definen ajustes globales relacionados con la seguridad, el manejo
+# de errores y el comportamiento básico del framework.
+# ─────────────────────────────────────────────────────────────────────────────
+
+nelmio_cors:
+    defaults:
+        origin_regex: false
+        allow_origin:
+            - 'http://localhost:4200'
+            - 'http://127.0.0.1:4200'
+            - 'https://asaderobame.com'
+        allow_methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS']
+        allow_headers: ['Content-Type', 'Authorization']
+        expose_headers: ['Authorization']
+        max_age: 3600
+    paths:
+        '^/api/': ~

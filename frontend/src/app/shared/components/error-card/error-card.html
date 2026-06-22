@@ -1,0 +1,75 @@
+<article class="error-card" aria-labelledby="error-heading">
+
+  <div class="error-icon" aria-hidden="true">
+    <tabler-icon [icon]="icon()" [size]="24" />
+  </div>
+
+  <p class="error-code" aria-hidden="true">{{ type() }}</p>
+  <span class="error-divider" aria-hidden="true"></span>
+
+  <h1 id="error-heading" class="error-title">{{ title() }}</h1>
+  <p class="error-desc">{{ desc() }}</p>
+
+  <div class="error-actions">
+
+    @switch (type()) {
+
+      @case ('401') {
+        <a routerLink="/home/login" class="btn-primary">
+          <tabler-icon icon="login" [size]="17" aria-hidden="true" />
+          {{ authT().loginBtn }}
+        </a>
+        <a routerLink="/home" class="btn-secondary">
+          <tabler-icon icon="home" [size]="17" aria-hidden="true" />
+          {{ t().backHome }}
+        </a>
+      }
+
+      @case ('403') {
+        <a routerLink="/home" class="btn-primary">
+          <tabler-icon icon="home" [size]="17" aria-hidden="true" />
+          {{ t().backHome }}
+        </a>
+        <button type="button" class="btn-secondary" (click)="goBack()">
+          <tabler-icon icon="arrow-left" [size]="17" aria-hidden="true" />
+          {{ t().goBack }}
+        </button>
+      }
+
+      @case ('404') {
+        <a routerLink="/home" class="btn-primary">
+          <tabler-icon icon="home" [size]="17" aria-hidden="true" />
+          {{ t().backHome }}
+        </a>
+        <button type="button" class="btn-secondary" (click)="goBack()">
+          <tabler-icon icon="arrow-left" [size]="17" aria-hidden="true" />
+          {{ t().goBack }}
+        </button>
+      }
+
+      @case ('500') {
+        <a routerLink="/home" class="btn-primary">
+          <tabler-icon icon="home" [size]="17" aria-hidden="true" />
+          {{ t().backHome }}
+        </a>
+        <button type="button" class="btn-secondary" (click)="reload()">
+          <tabler-icon icon="refresh" [size]="17" aria-hidden="true" />
+          {{ t().retry }}
+        </button>
+      }
+
+      @case ('503') {
+        <a routerLink="/home" class="btn-primary">
+          <tabler-icon icon="home" [size]="17" aria-hidden="true" />
+          {{ t().backHome }}
+        </a>
+        <button type="button" class="btn-secondary" (click)="reload()">
+          <tabler-icon icon="refresh" [size]="17" aria-hidden="true" />
+          {{ t().retry }}
+        </button>
+      }
+
+    }
+
+  </div>
+</article>

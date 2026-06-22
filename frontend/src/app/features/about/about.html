@@ -1,0 +1,343 @@
+﻿<!-- Breadcrumb -->
+<div class="mx-auto w-full max-w-7xl px-4 pt-8 md:px-6">
+  <app-breadcrumb-bar
+    [crumbs]="[
+      { label: 'Inicio', route: '/home' },
+      { label: 'Acerca de nosotros', route: '' },
+    ]"
+  />
+</div>
+
+<!-- ── HERO ─────────────────────────────────────────────────────────────────── -->
+<section
+  class="relative flex min-h-[62vh] items-center overflow-hidden bg-surface-dark"
+  aria-labelledby="hero-heading"
+>
+  <!-- Background image -->
+  @if (!heroImageFailed) {
+    <img
+      src="img/pollo.jpg"
+      alt=""
+      aria-hidden="true"
+      (error)="heroImageFailed = true"
+      class="absolute inset-0 h-full w-full object-cover object-center opacity-20"
+    />
+  }
+
+  <!-- Gradient overlay: solid on the left (text), fades right (image) -->
+  <div
+    class="absolute inset-0 bg-gradient-to-r from-surface-dark via-surface-dark/90 to-surface-dark/40"
+    aria-hidden="true"
+  ></div>
+
+  <div class="relative z-10 mx-auto w-full max-w-7xl px-4 py-20 md:px-6 lg:py-28">
+    <div class="max-w-2xl">
+      <!-- Title -->
+      <h1
+        id="hero-heading"
+        class="font-display text-h1 uppercase leading-tight tracking-wide text-text-inverse"
+      >
+        Tradición,
+        <span class="underline decoration-accent decoration-[4px] underline-offset-8">sabor</span>
+        y reservas<br class="hidden sm:block" />
+        sin esperas
+      </h1>
+
+      <!-- Description -->
+      <p class="mt-6 max-w-xl text-body leading-relaxed text-text-inverse/80">
+        Bame reúne los mejores asaderos especializados en pollo asado para que puedas consultar la
+        carta, realizar pedidos y reservar tu comida de forma rápida y sencilla.
+      </p>
+
+      <!-- CTAs -->
+      <div class="mt-10 flex flex-wrap gap-3">
+        <a
+          routerLink="/home/locales"
+          aria-label="Ver todos los asaderos disponibles en Bame"
+          class="inline-flex items-center gap-2 rounded-xl bg-brand px-8 py-3 font-bold text-text-inverse transition-colors hover:bg-brand-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/50 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-dark"
+        >
+          <tabler-icon icon="building-store" [size]="20" aria-hidden="true" />
+          Ver asaderos
+        </a>
+        <a
+          routerLink="/home"
+          class="inline-flex items-center gap-2 rounded-xl border border-white/25 bg-white/5 px-8 py-3 font-bold text-text-inverse backdrop-blur-sm transition-colors hover:border-accent/50 hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50"
+        >
+          <tabler-icon icon="home" [size]="20" aria-hidden="true" />
+          Volver al inicio
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── QUIÉNES SOMOS ─────────────────────────────────────────────────────────── -->
+<div class="mx-auto w-full max-w-7xl px-4 py-16 md:px-6 md:py-20">
+  <section aria-labelledby="quienes-heading">
+    <div
+      class="rounded-2xl border border-border-default bg-surface-card p-8 shadow-sm md:p-12 lg:p-16"
+    >
+      <div class="grid grid-cols-1 items-center gap-10 lg:grid-cols-2">
+        <!-- Texto -->
+        <div>
+          <h2
+            id="quienes-heading"
+            class="mb-6 w-fit font-display text-h2 uppercase leading-tight tracking-wide text-text-primary underline decoration-accent decoration-[3px] underline-offset-6"
+          >
+            Quiénes somos
+          </h2>
+
+          <p class="text-body leading-relaxed text-text-secondary">
+            Bame nace con el objetivo de modernizar la experiencia de compra en los asaderos
+            tradicionales, permitiendo a los clientes consultar productos, realizar pedidos y
+            reservar con antelación desde cualquier dispositivo.
+          </p>
+
+          <p class="mt-4 text-body leading-relaxed text-text-secondary">
+            Creemos que la tradición y la tecnología pueden ir de la mano. Por eso conectamos a los
+            mejores asaderos con sus clientes de una forma sencilla, rápida y sin fricciones.
+          </p>
+        </div>
+
+        <!-- Imagen -->
+        <div class="flex items-center justify-center">
+          <div class="relative">
+            <!-- Círculo principal -->
+            <div
+              class="h-52 w-52 overflow-hidden rounded-full border-4 border-accent/30 bg-surface-muted shadow-inner"
+            >
+              <img
+                src="/img/quien_somos.png"
+                alt="Quiénes somos"
+                class="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
+              />
+            </div>
+
+            <!-- Ring decorativo -->
+            <div
+              class="absolute -inset-4 rounded-full border border-accent/15"
+              aria-hidden="true"
+            ></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ── QUÉ OFRECEMOS ─────────────────────────────────────────────────────────── -->
+<div class="mx-auto w-full max-w-7xl px-4 pb-16 md:px-6 md:pb-20">
+  <section aria-labelledby="ofrecemos-heading">
+    <!-- Section heading -->
+    <header class="mb-10">
+      <h2
+        id="ofrecemos-heading"
+        class="mb-3 w-fit font-display text-h2 uppercase leading-tight tracking-wide text-text-primary underline decoration-accent decoration-[3px] underline-offset-6"
+      >
+        Qué ofrecemos
+      </h2>
+      <p class="max-w-xl text-body text-text-secondary">
+        Todo lo que necesitas para disfrutar de la mejor comida tradicional sin complicaciones.
+      </p>
+    </header>
+
+    <!-- Feature cards -->
+    <ul class="m-0 grid list-none grid-cols-1 gap-6 p-0 sm:grid-cols-2 lg:grid-cols-4">
+      @for (feature of features; track feature.title) {
+        <li
+          class="group rounded-xl border border-border-default bg-surface-card p-6 shadow-sm transition-[transform,box-shadow,border-color] duration-300 hover:-translate-y-1 hover:border-brand/30 hover:shadow-lg"
+        >
+          <div
+            class="mb-5 flex size-14 items-center justify-center rounded-xl bg-surface-muted transition-colors duration-300 group-hover:bg-brand/10"
+          >
+            <tabler-icon [icon]="feature.icon" [size]="28" class="text-brand transition-colors duration-300 group-hover:text-brand" aria-hidden="true" />
+          </div>
+          <h3 class="mb-2 font-display text-body font-bold uppercase tracking-wide text-text-primary">
+            {{ feature.title }}
+          </h3>
+          <p class="text-body-sm leading-relaxed text-text-secondary">
+            {{ feature.description }}
+          </p>
+        </li>
+      }
+    </ul>
+  </section>
+</div>
+
+<!-- ── CÓMO FUNCIONA ─────────────────────────────────────────────────────────── -->
+<section class="bg-surface-muted py-16 md:py-20" aria-labelledby="como-heading">
+  <div class="mx-auto w-full max-w-7xl px-4 md:px-6">
+    <!-- Section heading -->
+    <header class="mb-12 text-center">
+      <h2
+        id="como-heading"
+        class="mb-3 inline-block font-display text-h2 uppercase leading-tight tracking-wide text-text-primary underline decoration-accent decoration-[3px] underline-offset-6"
+      >
+        Cómo funciona
+      </h2>
+      <p class="mx-auto mt-4 max-w-lg text-body text-text-secondary">
+        Reservar en Bame es tan sencillo como cuatro pasos.
+      </p>
+    </header>
+
+    <!-- Steps -->
+    <ol class="m-0 list-none p-0">
+      <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        @for (step of steps; track step.number; let last = $last) {
+          <li class="relative flex flex-col">
+            <div
+              class="group flex h-full flex-col rounded-xl border border-border-default bg-surface-card p-6 shadow-sm transition-[border-color] duration-200 hover:border-accent/30"
+            >
+              <!-- Number + icon row -->
+              <div class="mb-5 flex items-center gap-3">
+                <span
+                  class="flex size-11 shrink-0 items-center justify-center rounded-full bg-brand font-display text-h3 font-bold text-text-inverse shadow-sm shadow-brand/30"
+                  aria-hidden="true"
+                >
+                  {{ step.number }}
+                </span>
+                <div
+                  class="flex size-11 items-center justify-center rounded-xl border border-border-default bg-surface-muted"
+                >
+                  <tabler-icon [icon]="step.icon" [size]="20" class="text-accent" aria-hidden="true" />
+                </div>
+              </div>
+
+              <!-- Content -->
+              <h3 class="mb-2 font-display text-body font-bold uppercase tracking-wide text-text-primary">
+                <span class="sr-only">Paso {{ step.number }}: </span>{{ step.title }}
+              </h3>
+              <p class="text-body-sm leading-relaxed text-text-secondary">
+                {{ step.description }}
+              </p>
+            </div>
+
+            <!-- Connector arrow (desktop, between steps) -->
+            @if (!last) {
+              <div
+                class="absolute right-0 top-[2.75rem] z-10 hidden -translate-y-1/2 translate-x-3 lg:flex"
+                aria-hidden="true"
+              >
+                <div
+                  class="flex size-6 items-center justify-center rounded-full border border-border-default bg-surface-muted shadow-sm"
+                >
+                  <tabler-icon icon="chevron-right" [size]="14" class="text-text-muted" aria-hidden="true" />
+                </div>
+              </div>
+            }
+          </li>
+        }
+      </div>
+    </ol>
+  </div>
+</section>
+
+<!-- ── ESTADÍSTICAS ───────────────────────────────────────────────────────────── -->
+<section class="bg-surface-dark py-16 md:py-20" aria-label="Estadísticas de Bame">
+  <div class="mx-auto w-full max-w-7xl px-4 md:px-6">
+    <ul class="m-0 grid list-none grid-cols-2 gap-8 p-0 lg:grid-cols-4">
+      @for (stat of stats; track stat.label) {
+        <li class="flex flex-col items-center justify-center text-center">
+          <span
+            class="font-display text-7xl font-bold leading-none text-brand md:text-8xl"
+            aria-label="{{ stat.value }} {{ stat.label }}"
+          >
+            {{ stat.value }}
+          </span>
+          <span class="mt-3 max-w-[10rem] text-body-sm font-semibold uppercase tracking-wider text-text-inverse/60">
+            {{ stat.label }}
+          </span>
+        </li>
+      }
+    </ul>
+  </div>
+</section>
+
+<!-- ── VALORES ───────────────────────────────────────────────────────────────── -->
+<div class="mx-auto w-full max-w-7xl px-4 py-16 md:px-6 md:py-20">
+  <section aria-labelledby="valores-heading">
+    <!-- Section heading -->
+    <header class="mb-10">
+      <h2
+        id="valores-heading"
+        class="mb-3 w-fit font-display text-h2 uppercase leading-tight tracking-wide text-text-primary underline decoration-accent decoration-[3px] underline-offset-6"
+      >
+        Nuestros valores
+      </h2>
+      <p class="max-w-lg text-body text-text-secondary">
+        Los principios que guían cada decisión que tomamos en Bame.
+      </p>
+    </header>
+
+    <!-- Value cards -->
+    <ul class="m-0 grid list-none grid-cols-1 gap-6 p-0 md:grid-cols-3">
+      @for (value of values; track value.title) {
+        <li
+          class="rounded-xl border border-border-default bg-surface-card p-8 shadow-sm transition-[border-color] duration-200 hover:border-accent/30"
+        >
+          <!-- Icon with accent left bar -->
+          <div class="mb-5 flex items-center gap-4">
+            <div class="h-12 w-1 shrink-0 rounded-full bg-accent" aria-hidden="true"></div>
+            <div class="flex size-12 items-center justify-center rounded-xl bg-surface-muted">
+              <tabler-icon [icon]="value.icon" [size]="24" class="text-accent" aria-hidden="true" />
+            </div>
+          </div>
+          <h3 class="mb-3 font-display text-h3 uppercase tracking-wide text-text-primary">
+            {{ value.title }}
+          </h3>
+          <p class="text-body leading-relaxed text-text-secondary">
+            {{ value.description }}
+          </p>
+        </li>
+      }
+    </ul>
+  </section>
+</div>
+
+<!-- ── CTA FINAL ─────────────────────────────────────────────────────────────── -->
+<div class="mx-auto w-full max-w-7xl px-4 pb-20 md:px-6">
+  <section
+    class="overflow-hidden rounded-2xl border border-border-default bg-surface-card shadow-sm"
+    aria-labelledby="cta-heading"
+  >
+    <!-- Decorative top stripe -->
+    <div class="h-1.5 w-full bg-gradient-to-r from-brand via-accent to-brand" aria-hidden="true"></div>
+
+    <div class="px-8 py-14 text-center md:px-16">
+      <!-- Icon -->
+      <div
+        class="mx-auto mb-6 flex size-16 items-center justify-center rounded-full bg-brand/10 ring-1 ring-brand/20"
+        aria-hidden="true"
+      >
+        <tabler-icon icon="shopping-cart" [size]="32" class="text-brand" />
+      </div>
+
+      <!-- Heading -->
+      <h2
+        id="cta-heading"
+        class="mx-auto mb-4 max-w-lg font-display text-h2 uppercase leading-tight tracking-wide text-text-primary"
+      >
+        ¿Listo para hacer
+        <span class="underline decoration-accent decoration-[3px] underline-offset-6">
+          tu pedido?
+        </span>
+      </h2>
+
+      <!-- Description -->
+      <p class="mx-auto mb-10 max-w-md text-body text-text-secondary">
+        Consulta nuestros asaderos y reserva tu comida en pocos minutos.
+      </p>
+
+      <!-- Button -->
+      <a
+        routerLink="/home/locales"
+        aria-label="Explorar todos los asaderos de Bame"
+        class="inline-flex items-center gap-2 rounded-xl bg-brand px-10 py-4 font-bold text-text-inverse transition-colors hover:bg-brand-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/50 focus-visible:ring-offset-2"
+      >
+        <tabler-icon icon="building-store" [size]="20" aria-hidden="true" />
+        Explorar asaderos
+        <tabler-icon icon="arrow-right" [size]="16" aria-hidden="true" />
+      </a>
+    </div>
+  </section>
+</div>

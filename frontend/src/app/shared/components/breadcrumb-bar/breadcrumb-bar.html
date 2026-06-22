@@ -1,0 +1,38 @@
+<div class="flex items-center mb-4 mt-4">
+  <!-- Home icon -->
+  <a
+    routerLink="/home"
+    class="inline-flex items-center justify-center shrink-0 hover:opacity-70 transition-opacity rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/50"
+    aria-label="Ir al inicio"
+  >
+    <tabler-icon icon="home" [size]="20" class="text-text-secondary" />
+  </a>
+
+  <!-- Breadcrumbs -->
+  @if (crumbs().length > 0) {
+    <span class="mx-2 md:mx-3 text-body font-light text-text-muted/40 shrink-0" aria-hidden="true"
+      >/</span
+    >
+    <nav
+      aria-label="Migas de pan"
+      class="flex items-center min-w-0 flex-wrap text-body font-medium text-text-primary tracking-wide"
+    >
+      @for (crumb of crumbs(); track crumb.label; let last = $last) {
+        @if (last) {
+          <span aria-current="page" class="text-text-muted font-normal">{{ crumb.label }}</span>
+        } @else {
+          <a
+            [routerLink]="crumb.route"
+            class="underline hover:text-text-secondary transition-colors shrink-0"
+            >{{ crumb.label }}</a
+          >
+          <span
+            class="mx-2 md:mx-3 text-body font-light text-text-muted/40 shrink-0"
+            aria-hidden="true"
+            >/</span
+          >
+        }
+      }
+    </nav>
+  }
+</div>

@@ -1,0 +1,163 @@
+@if (isStandalonePanel()) {
+  <router-outlet />
+} @else {
+<!-- Overlay mobile -->
+@if (sidebarOpen()) {
+  <div
+    class="fixed inset-0 z-20 bg-black/60 lg:hidden"
+    (click)="close()"
+    aria-hidden="true"
+  ></div>
+}
+
+<!-- ── Sidebar ─────────────────────────────────────────────────────── -->
+<aside
+  class="fixed left-0 top-0 z-30 flex h-full w-56 flex-col bg-[#18181B] transition-transform duration-300 lg:translate-x-0"
+  [class.translate-x-0]="sidebarOpen()"
+  [class.-translate-x-full]="!sidebarOpen()"
+  aria-label="Navegación del panel"
+>
+  <!-- Logo -->
+  <div class="flex items-center gap-3 border-b border-white/10 px-5 py-4">
+    <span class="font-display text-2xl font-bold uppercase tracking-widest text-accent">
+      BAME
+    </span>
+    <div class="ml-auto flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/5 text-zinc-200">
+      <app-accessibility-menu />
+    </div>
+  </div>
+
+  <!-- Links de navegación -->
+  <nav class="flex flex-1 flex-col gap-0.5 px-3 py-4" aria-label="Secciones">
+
+    @if (hasLocal()) {
+      <!-- Resumen del día (responsable) -->
+      <a
+        [routerLink]="['/admin/local', sidebarLocalId(), 'resumen-dia']"
+        routerLinkActive="bg-accent/15 !text-accent"
+        class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-semibold text-zinc-400 transition-colors hover:bg-white/8 hover:text-zinc-100"
+        (click)="close()"
+      >
+        <tabler-icon icon="gauge" [size]="18" aria-hidden="true" />
+        Resumen del día
+      </a>
+
+      <!-- Panel gerente (manager/admin) -->
+      @if (canAccessProducts()) {
+        <a
+          [routerLink]="['/admin/local', sidebarLocalId(), 'gerente']"
+          routerLinkActive="bg-accent/15 !text-accent"
+          class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-semibold text-zinc-400 transition-colors hover:bg-white/8 hover:text-zinc-100"
+          (click)="close()"
+        >
+          <tabler-icon icon="star" [size]="18" aria-hidden="true" />
+          Panel gerente
+        </a>
+      }
+
+      <!-- Pedidos -->
+      <a
+        [routerLink]="['/admin/local', sidebarLocalId(), 'reservas']"
+        routerLinkActive="bg-accent/15 !text-accent"
+        class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-semibold text-zinc-400 transition-colors hover:bg-white/8 hover:text-zinc-100"
+        (click)="close()"
+      >
+        <tabler-icon icon="file-description" [size]="18" aria-hidden="true" />
+        Pedidos
+      </a>
+
+      <!-- Disponibilidad -->
+      <a
+        [routerLink]="['/admin/local', sidebarLocalId(), 'disponibilidad']"
+        routerLinkActive="bg-accent/15 !text-accent"
+        class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-semibold text-zinc-400 transition-colors hover:bg-white/8 hover:text-zinc-100"
+        (click)="close()"
+      >
+        <tabler-icon icon="meat" [size]="18" aria-hidden="true" />
+        Disponibilidad
+      </a>
+
+      @if (canAccessProducts()) {
+        <!-- Administración / Config avanzada -->
+        <a
+          [routerLink]="['/admin/local', sidebarLocalId()]"
+          routerLinkActive="bg-accent/15 !text-accent"
+          [routerLinkActiveOptions]="{ exact: true }"
+          class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-semibold text-zinc-400 transition-colors hover:bg-white/8 hover:text-zinc-100"
+          (click)="close()"
+        >
+          <tabler-icon icon="package" [size]="18" aria-hidden="true" />
+          Administración
+        </a>
+      }
+
+    } @else {
+      <!-- Admin global (sin local asignado) -->
+      <a
+        routerLink="/admin"
+        routerLinkActive="bg-accent/15 !text-accent"
+        [routerLinkActiveOptions]="{ exact: true }"
+        class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-semibold text-zinc-400 transition-colors hover:bg-white/8 hover:text-zinc-100"
+        (click)="close()"
+      >
+        <tabler-icon icon="building-store" [size]="18" aria-hidden="true" />
+        Panel admin
+      </a>
+    }
+
+  </nav>
+
+  <!-- Pie: usuario + cerrar sesión -->
+  <div class="border-t border-white/10 px-3 py-4">
+    @if (user() != null) {
+      <div class="mb-3 px-3">
+        <p class="text-[10px] font-bold uppercase tracking-wider text-zinc-600">Usuario</p>
+        <p class="truncate text-sm font-semibold text-zinc-300">{{ user()!.name }}</p>
+      </div>
+    }
+
+    <button
+      type="button"
+      (click)="logout()"
+      class="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-semibold text-zinc-500 transition-colors hover:bg-brand/15 hover:text-brand"
+    >
+      <tabler-icon icon="logout" [size]="18" aria-hidden="true" />
+      Cerrar sesión
+    </button>
+  </div>
+</aside>
+
+<!-- ── Área principal ──────────────────────────────────────────────── -->
+<div class="flex min-h-screen flex-col lg:ml-56">
+
+  <!-- Barra superior móvil -->
+  <div
+    class="flex items-center justify-between border-b border-border-default bg-[#18181B] px-4 py-3 lg:hidden"
+  >
+    <button
+      type="button"
+      (click)="toggle()"
+      [attr.aria-expanded]="sidebarOpen()"
+      aria-label="Abrir menú de navegación"
+      class="rounded-lg p-1.5 text-zinc-300 hover:bg-white/10"
+    >
+      <tabler-icon icon="menu2" [size]="22" aria-hidden="true" />
+    </button>
+
+    <span class="font-display text-xl font-bold uppercase tracking-widest text-accent">
+      BAME
+    </span>
+
+    <!-- Espacio simétrico -->
+    <div class="flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/5 text-zinc-200">
+      <app-accessibility-menu />
+    </div>
+  </div>
+
+  <!-- Contenido de la ruta hija -->
+  <main class="flex-1 min-w-0">
+    <router-outlet />
+  </main>
+
+</div>
+}

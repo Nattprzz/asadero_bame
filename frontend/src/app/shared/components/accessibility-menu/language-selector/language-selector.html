@@ -1,0 +1,35 @@
+﻿<div class="flex flex-col gap-1.5">
+  <label class="text-body-sm font-medium text-text-muted">Idioma</label>
+
+  <div class="relative">
+    <!-- Trigger button -->
+    <button type="button"
+      [attr.aria-haspopup]="'listbox'"
+      [attr.aria-expanded]="isOpen()"
+      (click)="toggle()"
+      (keydown)="onTriggerKeydown($event)"
+      class="w-full flex items-center justify-between gap-2 py-2 px-3 rounded-md bg-white/10 hover:bg-white/20 text-white transition-colors focus:outline-none focus:ring-2 focus:ring-accent/60">
+      <span class="text-body-sm font-medium">{{ currentLabel() }}</span>
+      <tabler-icon icon="chevron-up" [size]="16" class="shrink-0 transition-transform duration-200" [class.rotate-180]="isOpen()" />
+    </button>
+
+    <!-- Listbox dropdown -->
+    @if (isOpen()) {
+    <div role="listbox"
+      [attr.aria-label]="'Seleccionar idioma'"
+      (keydown)="onListKeydown($event)"
+      class="absolute z-10 left-0 right-0 top-full mt-1 max-h-48 overflow-y-auto rounded-md bg-surface-dark border border-white/10 shadow-lg">
+      @for (lang of languages(); track trackByCode($index, lang); let i = $index) {
+      <div role="option"
+        [attr.aria-selected]="lang.code === selected()"
+        (click)="select(lang.code)"
+        [class.bg-white/15]="i === activeIndex()"
+        [class.text-accent]="lang.code === selected()"
+        class="px-3 py-2 text-body-sm text-white cursor-pointer hover:bg-white/10 transition-colors">
+        {{ lang.nativeName }}
+      </div>
+      }
+    </div>
+    }
+  </div>
+</div>
